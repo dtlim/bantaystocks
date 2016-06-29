@@ -11,31 +11,29 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
+import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
+import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.home.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
 import com.google.gson.Gson;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Created by dale on 6/23/16.
  */
 public class StocksService extends Service {
 
-    private MqttClient mClient;
-
     private WindowManager mWindowManager;
     private HomescreenStockItem mStockItem;
+    private StocksNotificationRepository mStocksRepository = new FakeStocksNotificationRepository();
 
     private Gson gson = new Gson();
     Handler handler = new Handler();
@@ -66,42 +64,15 @@ public class StocksService extends Service {
     }
 
     private void initialize() {
-
+        mStocksRepository.getStocks().subscribe(new Action1<List<Stock>>() {
+            @Override
+            public void call(List<Stock> stocks) {
+                Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
+                updateHomeStocksView(stocks);
+            }
+        });
         initializeForeground();
-
         addHomescreenStockView();
-
-        try {
-            mClient = new MqttClient("tcp://broker.mqttdashboard.com:1883",
-                    MqttClient.generateClientId(),
-                    new MemoryPersistence());
-
-            mClient.setCallback(new MqttCallback() {
-                @Override
-                public void connectionLost(Throwable throwable) {
-
-                }
-
-                @Override
-                public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                    String message = new String(mqttMessage.getPayload());
-                    Log.d("MQTT", topic + ": " + message);
-                    updateHomeStockView(message);
-                }
-
-                @Override
-                public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-                }
-            });
-            mClient.connect();
-
-            String[] topics = new String[]{"dale/stocks/2GO", "dale/stocks/TEL"};
-            subscribe(topics);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void initializeForeground() {
@@ -118,22 +89,6 @@ public class StocksService extends Service {
         startForeground(9999, notification);
     }
 
-    private void subscribe(String... topics) {
-        try {
-            if (mClient != null) {
-                int[] qos = new int[topics.length];
-                for (int i = 0; i < topics.length; i++) {
-                    qos[i] = 1;
-                }
-                mClient.subscribe(topics, qos);
-            }
-        }
-
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void addHomescreenStockView() {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mStockItem = new HomescreenStockItem(this);
@@ -147,19 +102,12 @@ public class StocksService extends Service {
         params.x = 0;
         params.y = 100;
 
-
         mStockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, params));
-
         mWindowManager.addView(mStockItem, params);
     }
 
-    private void updateHomeStockView(String message) {
-        final Stock stock = gson.fromJson(message, Stock.class);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mStockItem.setStock(stock);
-            }
-        });
+    private void updateHomeStocksView(List<Stock> stocks) {
+        mStockItem.setStock(stocks.get(0));
     }
+
 }
