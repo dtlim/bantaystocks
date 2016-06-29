@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import com.dtlim.bantaystocks.BantayStocksApplication;
+import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
@@ -34,6 +36,7 @@ public class StocksService extends Service {
     private WindowManager mWindowManager;
     private HomescreenStockItem mStockItem;
     private StocksNotificationRepository mStocksRepository = new FakeStocksNotificationRepository();
+    private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
 
     private Gson gson = new Gson();
     Handler handler = new Handler();
@@ -69,6 +72,7 @@ public class StocksService extends Service {
             public void call(List<Stock> stocks) {
                 Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
                 updateHomeStocksView(stocks);
+                saveStocksToDb(stocks);
             }
         });
         initializeForeground();
@@ -108,6 +112,14 @@ public class StocksService extends Service {
 
     private void updateHomeStocksView(List<Stock> stocks) {
         mStockItem.setStock(stocks.get(0));
+    }
+
+    private void saveStocksToDb(List<Stock> stocks) {
+        for(int i=0; i<stocks.size(); i++) {
+            if(mDatabaseRepository.update(stocks.get(i)) <= 0) {
+                mDatabaseRepository.insert(stocks.get(i));
+            }
+        }
     }
 
 }

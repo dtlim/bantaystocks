@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
 
 /**
  * Created by dale on 6/28/16.
