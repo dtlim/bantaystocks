@@ -2,15 +2,12 @@ package com.dtlim.bantaystocks.data.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
-
-import java.io.File;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;

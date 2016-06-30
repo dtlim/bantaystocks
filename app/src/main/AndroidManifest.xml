@@ -21,7 +21,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".data.service.StocksService"
+        <service android:name=".data.service.StocksDisplayService"
+            android:process=":bantaystocks_service_process"/>
+
+        <service android:name=".data.service.StocksNotificationService"
             android:process=":bantaystocks_service_process"/>
 
     </application>

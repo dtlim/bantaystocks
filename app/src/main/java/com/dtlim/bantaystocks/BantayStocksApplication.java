@@ -1,13 +1,13 @@
 package com.dtlim.bantaystocks;
 
 import android.app.Application;
-import android.app.Service;
 import android.content.Intent;
 
 import com.dtlim.bantaystocks.data.database.DatabaseHelper;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.repository.SqliteDatabaseRepository;
-import com.dtlim.bantaystocks.data.service.StocksService;
+import com.dtlim.bantaystocks.data.service.StocksDisplayService;
+import com.dtlim.bantaystocks.data.service.StocksNotificationService;
 import com.facebook.stetho.Stetho;
 
 /**
@@ -21,7 +21,8 @@ public class BantayStocksApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initialize();
-        startHomescreenStocksService();
+        startStocksNotificationService();
+        startStocksDisplayService();
     }
 
     public void initialize() {
@@ -30,8 +31,13 @@ public class BantayStocksApplication extends Application {
                 new DatabaseHelper(this, "bantaystocks", 1));
     }
 
-    public void startHomescreenStocksService() {
-        Intent intent = new Intent(this, StocksService.class);
+    public void startStocksDisplayService() {
+        Intent intent = new Intent(this, StocksDisplayService.class);
+        startService(intent);
+    }
+
+    public void startStocksNotificationService() {
+        Intent intent = new Intent(this, StocksNotificationService.class);
         startService(intent);
     }
 

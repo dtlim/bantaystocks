@@ -1,7 +1,6 @@
 package com.dtlim.bantaystocks.data.database.repository;
 
 import com.dtlim.bantaystocks.data.model.Stock;
-import com.squareup.sqlbrite.SqlBrite;
 
 import rx.Observable;
 

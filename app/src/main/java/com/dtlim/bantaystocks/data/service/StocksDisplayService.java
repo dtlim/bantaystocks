@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PixelFormat;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -15,18 +14,13 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
-import com.dtlim.bantaystocks.data.database.dao.StockDao;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
-import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
-import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
-import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.home.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
-import com.google.gson.Gson;
 import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
@@ -40,11 +34,10 @@ import rx.schedulers.Schedulers;
 /**
  * Created by dale on 6/23/16.
  */
-public class StocksService extends Service {
+public class StocksDisplayService extends Service {
 
     private WindowManager mWindowManager;
     private HomescreenStockItem mStockItem;
-    private StocksNotificationRepository mStocksRepository = new MqttStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
 
     @Override
@@ -73,7 +66,7 @@ public class StocksService extends Service {
     }
 
     private void initialize() {
-
+        Log.d("MQTT", "MQTT start display service");
         Observable<SqlBrite.Query> stocks = mDatabaseRepository.queryStocks();
 
         stocks.subscribeOn(Schedulers.newThread())
@@ -87,18 +80,8 @@ public class StocksService extends Service {
                             updateHomeStocksView(list);
                         }
                     }
-        });
+                });
 
-        mStocksRepository.getStocks()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Stock>>() {
-                    @Override
-                    public void call(List<Stock> stocks) {
-                        Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
-                        saveStocksToDb(stocks);
-                    }
-        });
         initializeForeground();
         addHomescreenStockView();
     }
@@ -136,14 +119,6 @@ public class StocksService extends Service {
 
     private void updateHomeStocksView(List<Stock> stocks) {
         mStockItem.setStock(stocks.get(0));
-    }
-
-    private void saveStocksToDb(List<Stock> stocks) {
-        for(int i=0; i<stocks.size(); i++) {
-            if(mDatabaseRepository.update(stocks.get(i)) <= 0) {
-                mDatabaseRepository.insert(stocks.get(i));
-            }
-        }
     }
 
     // TODO delete this

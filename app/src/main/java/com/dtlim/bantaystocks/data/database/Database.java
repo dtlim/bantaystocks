@@ -1,7 +1,6 @@
 package com.dtlim.bantaystocks.data.database;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import rx.Observable;
 
