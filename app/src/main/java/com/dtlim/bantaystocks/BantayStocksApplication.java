@@ -22,7 +22,6 @@ public class BantayStocksApplication extends Application {
         super.onCreate();
         initialize();
         startStocksNotificationService();
-        startStocksDisplayService();
     }
 
     public void initialize() {
