@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,7 +15,10 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
+import com.dtlim.bantaystocks.data.database.dao.StockDao;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
+import com.dtlim.bantaystocks.data.database.table.StockTable;
+import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
@@ -23,10 +27,15 @@ import com.dtlim.bantaystocks.home.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
 import com.google.gson.Gson;
+import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dale on 6/23/16.
@@ -35,11 +44,8 @@ public class StocksService extends Service {
 
     private WindowManager mWindowManager;
     private HomescreenStockItem mStockItem;
-    private StocksNotificationRepository mStocksRepository = new FakeStocksNotificationRepository();
+    private StocksNotificationRepository mStocksRepository = new MqttStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
-
-    private Gson gson = new Gson();
-    Handler handler = new Handler();
 
     @Override
     public void onCreate() {
@@ -67,13 +73,31 @@ public class StocksService extends Service {
     }
 
     private void initialize() {
-        mStocksRepository.getStocks().subscribe(new Action1<List<Stock>>() {
-            @Override
-            public void call(List<Stock> stocks) {
-                Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
-                updateHomeStocksView(stocks);
-                saveStocksToDb(stocks);
-            }
+
+        Observable<SqlBrite.Query> stocks = mDatabaseRepository.queryStocks();
+
+        stocks.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<SqlBrite.Query>() {
+                    @Override
+                    public void call(SqlBrite.Query query) {
+                        Cursor cursor = query.run();
+                        List<Stock> list = parseCursor(cursor);
+                        if(list != null && !list.isEmpty()) {
+                            updateHomeStocksView(list);
+                        }
+                    }
+        });
+
+        mStocksRepository.getStocks()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Stock>>() {
+                    @Override
+                    public void call(List<Stock> stocks) {
+                        Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
+                        saveStocksToDb(stocks);
+                    }
         });
         initializeForeground();
         addHomescreenStockView();
@@ -120,6 +144,35 @@ public class StocksService extends Service {
                 mDatabaseRepository.insert(stocks.get(i));
             }
         }
+    }
+
+    // TODO delete this
+    protected List<Stock> parseCursor(Cursor cursor) {
+        List<Stock> stockList = new ArrayList<>();
+
+        try{
+            if(cursor != null && cursor.moveToFirst()) {
+                do {
+                    Stock stock = new Stock();
+                    stock.setName(cursor.getString(cursor.getColumnIndex(StockTable.NAME)));
+                    stock.setPercentChange(cursor.getString(cursor.getColumnIndex(StockTable.PERCENT_CHANGE)));
+                    stock.setVolume(cursor.getString(cursor.getColumnIndex(StockTable.VOLUME)));
+                    stock.setSymbol(cursor.getString(cursor.getColumnIndex(StockTable.SYMBOL)));
+                    Price price = new Price(cursor.getString(cursor.getColumnIndex(StockTable.CURRENCY)),
+                            cursor.getString(cursor.getColumnIndex(StockTable.PRICE)));
+                    stock.setPrice(price);
+                    stockList.add(stock);
+                }
+                while (cursor.moveToNext());
+            }
+        }
+        finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return stockList;
     }
 
 }

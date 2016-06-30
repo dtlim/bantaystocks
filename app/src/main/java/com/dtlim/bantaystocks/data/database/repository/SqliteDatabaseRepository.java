@@ -1,11 +1,19 @@
 package com.dtlim.bantaystocks.data.database.repository;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dtlim.bantaystocks.data.database.Database;
 import com.dtlim.bantaystocks.data.database.dao.StockDao;
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
+
+import rx.Observable;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dale on 6/29/16.
@@ -34,5 +42,9 @@ public class SqliteDatabaseRepository implements DatabaseRepository{
     @Override
     public long delete(Stock stock) {
         return mStockDao.delete(StockTable.NAME + "=?", new String[]{stock.getName()});
+    }
+
+    public Observable<SqlBrite.Query> queryStocks() {
+        return mStockDao.query("SELECT * FROM " + StockTable.TABLE_NAME);
     }
 }

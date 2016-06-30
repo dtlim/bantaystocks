@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.dtlim.bantaystocks.data.database.Database;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by dale on 6/29/16.
@@ -23,14 +26,8 @@ public abstract class BaseDao<T> {
         mDatabase = database;
     }
 
-    public List<T> query(String selection, String[] selectionArgs) {
-        return parseCursor(mDatabase.query(getTableName(), selection, selectionArgs));
-    }
-
-    public List<T> query(String selection, String[] selectionArgs, String groupBy,
-                         String having, String orderBy) {
-        return parseCursor(mDatabase.query(getTableName(), selection, selectionArgs,
-                groupBy, having, orderBy));
+    public Observable<SqlBrite.Query> query(String query) {
+        return mDatabase.query(getTableName(), query);
     }
 
     public long insert(T object) {

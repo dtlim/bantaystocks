@@ -50,8 +50,8 @@ public class StockDao extends BaseDao<Stock>{
                     stock.setPercentChange(cursor.getString(cursor.getColumnIndex(StockTable.PERCENT_CHANGE)));
                     stock.setVolume(cursor.getString(cursor.getColumnIndex(StockTable.VOLUME)));
                     stock.setSymbol(cursor.getString(cursor.getColumnIndex(StockTable.SYMBOL)));
-                    Price price = new Price(cursor.getString(cursor.getColumnIndex(StockTable.PRICE)),
-                            cursor.getString(cursor.getColumnIndex(StockTable.CURRENCY)));
+                    Price price = new Price(cursor.getString(cursor.getColumnIndex(StockTable.CURRENCY)),
+                            cursor.getString(cursor.getColumnIndex(StockTable.PRICE)));
                     stock.setPrice(price);
                     stockList.add(stock);
                 }

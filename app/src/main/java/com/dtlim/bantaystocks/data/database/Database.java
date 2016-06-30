@@ -3,13 +3,13 @@ package com.dtlim.bantaystocks.data.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import rx.Observable;
+
 /**
  * Created by dale on 6/29/16.
  */
 public interface Database {
-    Cursor query(String table, String selection, String[] selectionArgs);
-
-    Cursor query(String table, String selection, String[] selectionArgs, String groupBy, String having, String orderBy);
+    Observable query(String table, String query);
 
     long insert(String table, ContentValues contentValues);
 

@@ -54,7 +54,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
             });
             mClient.connect();
 
-            String[] topics = new String[]{"dale/stocks/2GO", "dale/stocks/TEL"};
+            String[] topics = new String[]{"dale/stocks/MER", "dale/stocks/TEL"};
             subscribe(topics);
         }
         catch(Exception e) {

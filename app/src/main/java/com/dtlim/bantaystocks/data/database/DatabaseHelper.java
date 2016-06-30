@@ -7,28 +7,27 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dtlim.bantaystocks.data.database.table.StockTable;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.io.File;
+
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dale on 6/29/16.
  */
 public class DatabaseHelper extends SQLiteOpenHelper implements Database{
 
-    private File mDatabaseFile;
-    SQLiteDatabase mDatabase;
+    BriteDatabase mBriteDatabase;
+    private SqlBrite mSqlBrite = SqlBrite.create();
+
     private final Object mLock = new Object();
 
     public DatabaseHelper(Context context, String name, int version) {
         super(context, name, null, version);
-        mDatabaseFile = context.getDatabasePath("bantaystocks");
-        try {
-            mDatabase = getWritableDatabase();
-        }
-        catch(Exception e) {
-            mDatabaseFile.delete();
-            e.printStackTrace();
-        }
+        mBriteDatabase = mSqlBrite.wrapDatabaseHelper(this, Schedulers.io());
     }
 
     @Override
@@ -47,79 +46,54 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Database{
     }
 
     @Override
-    public Cursor query(String table, String selection, String[] selectionArgs) {
-        synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                return mDatabase.query(table, null, selection, selectionArgs, "", "", "");
-            }
-            return null;
-        }
-    }
-
-    @Override
-    public Cursor query(String table, String selection, String[] selectionArgs,
-                        String groupBy, String having, String orderBy) {
-        synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                return mDatabase.query(table, null, selection, selectionArgs,
-                        groupBy, having, orderBy);
-            }
-            return null;
-        }
+    public Observable query(String table, String query) {
+        return mBriteDatabase.createQuery(table, query);
     }
 
     @Override
     public long insert(String table, ContentValues contentValues) {
         synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                return mDatabase.insert(table, null, contentValues);
-            }
-            return -1L;
+            return mBriteDatabase.insert(table, contentValues);
         }
     }
 
     @Override
     public int insert(String table, ContentValues[] contentValues) {
         synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                int count = 0;
-                mDatabase.beginTransaction();
+            int count = 0;
+            BriteDatabase.Transaction transaction = mBriteDatabase.newTransaction();
+            try {
                 for (ContentValues value : contentValues) {
-                    count += mDatabase.insert(table, null, value) != -1L ? 1 : 0;
-                    mDatabase.yieldIfContendedSafely();
+                    count += mBriteDatabase.insert(table, value) != -1L ? 1 : 0;
+                    transaction.yieldIfContendedSafely();
                 }
-                mDatabase.setTransactionSuccessful();
-                mDatabase.endTransaction();
-                return count;
+                transaction.markSuccessful();
             }
-            return 0;
+            finally{
+                transaction.end();
+            }
+            return count;
         }
     }
 
     @Override
     public int update(String table, ContentValues contentValues, String where, String[] whereArgs) {
         synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                return mDatabase.update(table, contentValues, where, whereArgs);
-            }
-            return 0;
+            return mBriteDatabase.update(table, contentValues, where, whereArgs);
         }
     }
 
     @Override
     public int delete(String table, String where, String[] whereArgs) {
         synchronized (mLock) {
-            if (mDatabase.isOpen()) {
-                return mDatabase.delete(table, where, whereArgs);
-            }
-            return 0;
+            return mBriteDatabase.delete(table, where, whereArgs);
         }
     }
 
     @Override
     public void closeDatabase() {
         synchronized (mLock) {
-            mDatabase.close();
+            mBriteDatabase.close();
         }
     }
 }
