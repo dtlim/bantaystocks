@@ -33,7 +33,7 @@ public class BantayStocksApplication extends Application {
                 new DatabaseHelper(this, "bantaystocks", 1));
         sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
 
-        sSharedPreferencesRepository.saveSubscribedStocks("TEL,MER");
+        sSharedPreferencesRepository.saveSubscribedStocks("TEL,MER,2GO");
     }
 
     public void startStocksDisplayService() {

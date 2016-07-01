@@ -23,14 +23,19 @@ import rx.subjects.PublishSubject;
  * Created by dale on 6/28/16.
  */
 public class MqttStocksNotificationRepository implements StocksNotificationRepository {
+
+    public static final String MQTT_SERVER_URI = "tcp://broker.mqttdashboard.com:1883";
+    public static final String TOPIC_PREFIX = "dale/stocks/";
+
     private MqttClient mClient;
     PublishSubject mStocksSubject;
+    Handler handler = new Handler(Looper.getMainLooper());
 
     public MqttStocksNotificationRepository() {
         mStocksSubject = PublishSubject.create();
 
         try {
-            mClient = new MqttClient("tcp://broker.mqttdashboard.com:1883",
+            mClient = new MqttClient(MQTT_SERVER_URI,
                     MqttClient.generateClientId(),
                     new MemoryPersistence());
 
@@ -53,9 +58,6 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
                 }
             });
             mClient.connect();
-
-            String[] topics = new String[]{"dale/stocks/MER", "dale/stocks/TEL"};
-            subscribe(topics);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -93,6 +95,19 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     }
 
     @Override
+    public void unsubscribeAll() {
+        try {
+            if (mClient != null) {
+                mClient.unsubscribe("dale/stocks/*");
+            }
+        }
+
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Observable<List<Stock>> getStocks() {
         return mStocksSubject.asObservable();
     }
@@ -100,7 +115,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     private void publishStocks(String message) {
         final Stock stock = new Gson().fromJson(message, Stock.class);
         Log.d("MQTT", "MQTT finish parsing ");
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 Log.d("MQTT", "MQTT start post " + Looper.myLooper().getThread().getName());

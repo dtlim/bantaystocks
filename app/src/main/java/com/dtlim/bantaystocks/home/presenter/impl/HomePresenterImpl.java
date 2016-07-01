@@ -1,6 +1,5 @@
 package com.dtlim.bantaystocks.home.presenter.impl;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
@@ -52,7 +51,6 @@ public class HomePresenterImpl implements HomePresenter {
         String subscribedStocks = mSharedPreferencesRepository.getSubscribedStocks();
         String[] subscribedStocksList = ParseUtility.parseStockList(subscribedStocks);
 
-        // TODO make specific query
         Observable<SqlBrite.Query> stocks = mDatabaseRepository.queryStocks(subscribedStocksList);
 
         stocks.subscribeOn(Schedulers.newThread())

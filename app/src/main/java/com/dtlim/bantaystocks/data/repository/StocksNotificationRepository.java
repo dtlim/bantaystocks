@@ -13,5 +13,6 @@ import rx.Observable;
 public interface StocksNotificationRepository {
     void subscribe(String... stocks);
     void unsubscribe(String... stocks);
+    void unsubscribeAll();
     Observable<List<Stock>> getStocks();
 }

@@ -12,8 +12,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
+import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
+import com.dtlim.bantaystocks.data.repository.LocalSharedPreferencesRepository;
 import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.home.view.HomeActivity;
@@ -29,7 +32,7 @@ import rx.schedulers.Schedulers;
  */
 public class StocksNotificationService extends Service {
 
-    private StocksNotificationRepository mStocksRepository = new MqttStocksNotificationRepository();
+    private StocksNotificationRepository mStocksNotificationRepository = new MqttStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferencesListener;
@@ -58,13 +61,17 @@ public class StocksNotificationService extends Service {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.d("MQTT", "MQTT detected shared prefs change " + key + " " + sharedPreferences.getString(key, ""));
+                if(key.equals(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS)) {
+                    subscribeToStocksFromSharedPreferences(sharedPreferences);
+                }
             }
         };
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferencesListener);
+        subscribeToStocksFromSharedPreferences(mSharedPreferences);
 
-        mStocksRepository.getStocks()
+        mStocksNotificationRepository.getStocks()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Stock>>() {
@@ -98,5 +105,15 @@ public class StocksNotificationService extends Service {
                 mDatabaseRepository.insert(stocks.get(i));
             }
         }
+    }
+
+    private void subscribeToStocksFromSharedPreferences(SharedPreferences sharedPreferences) {
+        String stocks = sharedPreferences.getString(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS, "");
+        String[] stockList = ParseUtility.parseStockList(stocks);
+        for (int i = 0; i < stockList.length; i++) {
+            stockList[i] = "dale/stocks/" + stockList[i];
+        }
+        mStocksNotificationRepository.unsubscribeAll();
+        mStocksNotificationRepository.subscribe(stockList);
     }
 }

@@ -13,7 +13,7 @@ public class DummyModels {
     public static List<Stock> getDummyStockList() {
         List<Stock> list = new ArrayList<>();
         Stock stock = new Stock();
-        stock.setName("Philippine Long Distance Telecommunications Inc.");
+        stock.setName("PLDT");
         stock.setSymbol("TEL");
         stock.setPrice(new Price("PHP", "123.00"));
         stock.setVolume("1000");
@@ -29,8 +29,8 @@ public class DummyModels {
         list.add(stock);
 
         stock = new Stock();
-        stock.setName("Philippine Long Distance Telecommunications Inc.");
-        stock.setSymbol("TEL");
+        stock.setName("2GO Travel");
+        stock.setSymbol("2GO");
         stock.setPrice(new Price("PHP", "123.00"));
         stock.setVolume("1000");
         stock.setPercentChange("5.67");
