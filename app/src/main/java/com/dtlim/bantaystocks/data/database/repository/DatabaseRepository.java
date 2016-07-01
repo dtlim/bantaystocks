@@ -12,4 +12,5 @@ public interface DatabaseRepository {
     long update(Stock stock);
     long delete(Stock stock);
     Observable queryStocks();
+    Observable queryStocks(String... stockSymbols);
 }

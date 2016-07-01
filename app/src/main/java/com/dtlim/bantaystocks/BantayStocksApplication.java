@@ -6,6 +6,8 @@ import android.content.Intent;
 import com.dtlim.bantaystocks.data.database.DatabaseHelper;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.repository.SqliteDatabaseRepository;
+import com.dtlim.bantaystocks.data.repository.LocalSharedPreferencesRepository;
+import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.data.service.StocksDisplayService;
 import com.dtlim.bantaystocks.data.service.StocksNotificationService;
 import com.facebook.stetho.Stetho;
@@ -16,6 +18,7 @@ import com.facebook.stetho.Stetho;
 public class BantayStocksApplication extends Application {
 
     private static DatabaseRepository sDatabaseRepository;
+    private static SharedPreferencesRepository sSharedPreferencesRepository;
 
     @Override
     public void onCreate() {
@@ -28,6 +31,9 @@ public class BantayStocksApplication extends Application {
         Stetho.initializeWithDefaults(this);
         sDatabaseRepository = new SqliteDatabaseRepository(
                 new DatabaseHelper(this, "bantaystocks", 1));
+        sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
+
+        sSharedPreferencesRepository.saveSubscribedStocks("TEL,MER");
     }
 
     public void startStocksDisplayService() {
@@ -42,5 +48,9 @@ public class BantayStocksApplication extends Application {
 
     public static DatabaseRepository getDatabaseRepository() {
         return sDatabaseRepository;
+    }
+
+    public static SharedPreferencesRepository getSharedPreferencesRepository() {
+        return sSharedPreferencesRepository;
     }
 }

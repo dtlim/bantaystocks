@@ -48,6 +48,7 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setStockList(List<Stock> list) {
         mListStocks = list;
+        notifyDataSetChanged();
     }
 
     @Override

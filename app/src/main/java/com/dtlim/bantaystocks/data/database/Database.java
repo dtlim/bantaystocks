@@ -10,6 +10,8 @@ import rx.Observable;
 public interface Database {
     Observable query(String table, String query);
 
+    Observable query(String table, String query, String... args);
+
     long insert(String table, ContentValues contentValues);
 
     int insert(String table, ContentValues[] contentValues);

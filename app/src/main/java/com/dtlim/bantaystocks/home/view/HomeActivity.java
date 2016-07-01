@@ -1,12 +1,15 @@
-package com.dtlim.bantaystocks.home;
+package com.dtlim.bantaystocks.home.view;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -21,15 +24,21 @@ import android.widget.Button;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
 import com.dtlim.bantaystocks.R;
+import com.dtlim.bantaystocks.data.database.Database;
+import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
+import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.dummy.DummyModels;
 import com.dtlim.bantaystocks.home.adapter.HomeStocksAdapter;
+import com.dtlim.bantaystocks.home.presenter.HomePresenter;
+import com.dtlim.bantaystocks.home.presenter.impl.HomePresenterImpl;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity {
-
-    public static final int PERMISSION_REQUEST_SYSTEM_ALERT_WINDOW = 1;
+public class HomeActivity extends AppCompatActivity implements HomeView {
 
     @BindView(R.id.bantaystocks_toolbar)
     Toolbar mToolbar;
@@ -37,8 +46,9 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.button_start_display_service)
     Button mButton;
-    
+
     private HomeStocksAdapter mAdapter;
+    private HomePresenter mHomePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,29 +58,15 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeToolbar();
         initializeList();
+        initializePresenter();
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptToShowStockTicker();
+                changeSharedPref();
             }
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_SYSTEM_ALERT_WINDOW: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ((BantayStocksApplication) getApplication()).startStocksDisplayService();
-                }
-                else {
-
-                }
-                break;
-            }
-        }
     }
 
     private void initializeToolbar() {
@@ -87,6 +83,20 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private void initializePresenter() {
+        DatabaseRepository databaseRepository = BantayStocksApplication.getDatabaseRepository();
+        SharedPreferencesRepository sharedPreferencesRepository =
+                BantayStocksApplication.getSharedPreferencesRepository();
+        mHomePresenter = new HomePresenterImpl(databaseRepository, sharedPreferencesRepository);
+        mHomePresenter.bindView(this);
+        mHomePresenter.initializeData();
+    }
+
+    @Override
+    public void setSubscribedStocks(List<Stock> stocks) {
+        mAdapter.setStockList(stocks);
+    }
+
     // https://developer.android.com/reference/android/Manifest.permission.html#SYSTEM_ALERT_WINDOW
     private void attemptToShowStockTicker() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -97,6 +107,9 @@ public class HomeActivity extends AppCompatActivity {
                 requestDrawOverOtherAppsPermission();
             }
         }
+        else {
+            ((BantayStocksApplication) getApplication()).startStocksDisplayService();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -105,5 +118,12 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + packageName));
         startActivity(intent);
+    }
+
+    private void changeSharedPref() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("WATCHED_STOCKS", "hhhjgjg");
+        editor.apply();
     }
 }

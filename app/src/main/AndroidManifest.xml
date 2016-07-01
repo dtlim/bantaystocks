@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".home.HomeActivity">
+        <activity android:name=".home.view.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,11 +21,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".data.service.StocksDisplayService"
-            android:process=":bantaystocks_service_process"/>
+        <service android:name=".data.service.StocksDisplayService" />
 
-        <service android:name=".data.service.StocksNotificationService"
-            android:process=":bantaystocks_service_process"/>
+        <service android:name=".data.service.StocksNotificationService" />
 
     </application>
 

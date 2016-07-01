@@ -40,11 +40,17 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Database{
     private void resetDatabase(SQLiteDatabase sqLiteDatabase){
         sqLiteDatabase.execSQL(StockTable.DROP);
         onCreate(sqLiteDatabase);
+
     }
 
     @Override
     public Observable query(String table, String query) {
         return mBriteDatabase.createQuery(table, query);
+    }
+
+    @Override
+    public Observable query(String table, String query, String... args) {
+        return mBriteDatabase.createQuery(table, query, args);
     }
 
     @Override

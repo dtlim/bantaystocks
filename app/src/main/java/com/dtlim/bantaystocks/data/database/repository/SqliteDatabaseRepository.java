@@ -40,4 +40,13 @@ public class SqliteDatabaseRepository implements DatabaseRepository{
     public Observable<SqlBrite.Query> queryStocks() {
         return mStockDao.query("SELECT * FROM " + StockTable.TABLE_NAME);
     }
+
+    public Observable<SqlBrite.Query> queryStocks(String... stocks) {
+        String query = "SELECT * FROM " + StockTable.TABLE_NAME + " WHERE ";
+        for(int i=0; i<stocks.length; i++) {
+            query += StockTable.SYMBOL + "=?";
+            query += i==stocks.length-1 ? "" : " OR ";
+        }
+        return mStockDao.query(query, stocks);
+    }
 }

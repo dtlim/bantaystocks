@@ -30,6 +30,10 @@ public abstract class BaseDao<T> {
         return mDatabase.query(getTableName(), query);
     }
 
+    public Observable<SqlBrite.Query> query(String query, String... args) {
+        return mDatabase.query(getTableName(), query, args);
+    }
+
     public long insert(T object) {
         return mDatabase.insert(getTableName(), getContentValues(object));
     }

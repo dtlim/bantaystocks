@@ -18,7 +18,7 @@ import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
-import com.dtlim.bantaystocks.home.HomeActivity;
+import com.dtlim.bantaystocks.home.view.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
 import com.squareup.sqlbrite.SqlBrite;
