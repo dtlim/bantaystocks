@@ -14,6 +14,6 @@ public interface DatabaseRepository {
     long insert(List<Stock> stocks);
     long update(Stock stock);
     long delete(Stock stock);
-    Observable queryStocks();
-    Observable queryStocks(String... stockSymbols);
+    Observable<List<Stock>> queryStocks();
+    Observable<List<Stock>> queryStocks(String... stockSymbols);
 }

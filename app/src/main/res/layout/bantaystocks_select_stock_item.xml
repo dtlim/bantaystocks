@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/bantaystocks_select_stock_item_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TEL"
+            android:textSize="@dimen/bantaystocks_dimen_text_size_20"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bantaystocks_select_stock_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Philippine Long Distance bla bla"
+            android:textSize="@dimen/bantaystocks_dimen_text_size_12"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/bantaystocks_select_stock_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

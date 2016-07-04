@@ -55,22 +55,21 @@ public class StocksNotificationService extends Service {
 
     private void initialize() {
         Log.d("MQTT", "MQTT start notif service");
-//        mSharedPreferences = getSharedPreferences(".bantayStocksPref", Context.MODE_PRIVATE);
-
-        mSharedPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                Log.d("MQTT", "MQTT detected shared prefs change " + key + " " + sharedPreferences.getString(key, ""));
-                if(key.equals(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS)) {
-                    subscribeToStocksFromSharedPreferences(sharedPreferences);
-                }
-            }
-        };
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferencesListener);
-        subscribeToStocksFromSharedPreferences(mSharedPreferences);
-
+////        mSharedPreferences = getSharedPreferences(".bantayStocksPref", Context.MODE_PRIVATE);
+//
+//        mSharedPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+//            @Override
+//            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//                Log.d("MQTT", "MQTT detected shared prefs change " + key + " " + sharedPreferences.getString(key, ""));
+//                if(key.equals(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS)) {
+//                    subscribeToStocksFromSharedPreferences(sharedPreferences);
+//                }
+//            }
+//        };
+//
+//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        mSharedPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferencesListener);
+        subscribeToAllStocks();
         mStocksNotificationRepository.getStocks()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,7 +77,7 @@ public class StocksNotificationService extends Service {
                     @Override
                     public void call(List<Stock> stocks) {
                         Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
-                        saveStocksToDb(stocks);
+                            saveStocksToDb(stocks);
                     }
                 });
         initializeForeground();
@@ -103,6 +102,7 @@ public class StocksNotificationService extends Service {
         mDatabaseRepository.insert(stocks);
     }
 
+    // TODO delete this, only used for individual stock subscription, which is slow
     private void subscribeToStocksFromSharedPreferences(SharedPreferences sharedPreferences) {
         String stocks = sharedPreferences.getString(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS, "");
         String[] stockList = ParseUtility.parseStockList(stocks);
@@ -111,5 +111,10 @@ public class StocksNotificationService extends Service {
         }
         mStocksNotificationRepository.unsubscribeAll();
         mStocksNotificationRepository.subscribe(stockList);
+    }
+
+    private void subscribeToAllStocks() {
+        mStocksNotificationRepository.unsubscribeAll();
+        mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
     }
 }

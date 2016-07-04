@@ -51,48 +51,17 @@ public class HomePresenterImpl implements HomePresenter {
         String subscribedStocks = mSharedPreferencesRepository.getSubscribedStocks();
         String[] subscribedStocksList = ParseUtility.parseStockList(subscribedStocks);
 
-        Observable<SqlBrite.Query> stocks = mDatabaseRepository.queryStocks(subscribedStocksList);
+        Observable<List<Stock>> stocks = mDatabaseRepository.queryStocks(subscribedStocksList);
 
         stocks.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<SqlBrite.Query>() {
+                .subscribe(new Action1<List<Stock>>() {
                     @Override
-                    public void call(SqlBrite.Query query) {
-                        Cursor cursor = query.run();
-                        List<Stock> list = parseCursor(cursor);
-                        if(list != null && !list.isEmpty()) {
-                            mHomeView.setSubscribedStocks(list);
+                    public void call(List<Stock> stocks) {
+                        if(stocks != null && !stocks.isEmpty()) {
+                            mHomeView.setSubscribedStocks(stocks);
                         }
                     }
                 });
-    }
-
-    // TODO delete this
-    protected List<Stock> parseCursor(Cursor cursor) {
-        List<Stock> stockList = new ArrayList<>();
-
-        try{
-            if(cursor != null && cursor.moveToFirst()) {
-                do {
-                    Stock stock = new Stock();
-                    stock.setName(cursor.getString(cursor.getColumnIndex(StockTable.NAME)));
-                    stock.setPercentChange(cursor.getString(cursor.getColumnIndex(StockTable.PERCENT_CHANGE)));
-                    stock.setVolume(cursor.getString(cursor.getColumnIndex(StockTable.VOLUME)));
-                    stock.setSymbol(cursor.getString(cursor.getColumnIndex(StockTable.SYMBOL)));
-                    Price price = new Price(cursor.getString(cursor.getColumnIndex(StockTable.CURRENCY)),
-                            cursor.getString(cursor.getColumnIndex(StockTable.PRICE)));
-                    stock.setPrice(price);
-                    stockList.add(stock);
-                }
-                while (cursor.moveToNext());
-            }
-        }
-        finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return stockList;
     }
 }

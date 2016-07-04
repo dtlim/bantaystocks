@@ -1,30 +1,22 @@
 package com.dtlim.bantaystocks.home.view;
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
 import com.dtlim.bantaystocks.R;
-import com.dtlim.bantaystocks.data.database.Database;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
@@ -53,7 +45,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.bantaystocks_activity_home);
         ButterKnife.bind(this);
 
         initializeToolbar();

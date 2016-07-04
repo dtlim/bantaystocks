@@ -56,4 +56,8 @@ public class Stock {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
+
+    public boolean isValid() {
+        return name != null && price != null && price.getAmount() != null;
+    }
 }

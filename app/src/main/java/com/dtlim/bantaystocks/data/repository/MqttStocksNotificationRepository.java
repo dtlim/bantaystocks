@@ -126,24 +126,20 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     private void publishStocks(String message) {
         Stock stock;
         StockList stockList;
-        Log.d("MQTT", "MQTT start parsing " + message);
-        if((stock = ParseUtility.parseSingleStockFromJson(message)) != null) {
+        if((stock = ParseUtility.parseSingleStockFromJson(message)) != null && stock.isValid()) {
             emitSingleStock(stock);
         }
         else if((stockList = ParseUtility.parseStockListFromJson(message)) != null) {
             emitStockList(stockList);
         }
-        Log.d("MQTT", "MQTT finish parsing ");
     }
 
     private void emitSingleStock(final Stock stock) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d("MQTT", "MQTT start post " + Looper.myLooper().getThread().getName());
                 List<Stock> stocks = new ArrayList<Stock>();
                 stocks.add(stock);
-                Log.d("MQTT", "MQTT post" + stocks.size());
                 mStocksSubject.onNext(stocks);
             }
         });
@@ -153,9 +149,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d("MQTT", "MQTT start post " + Looper.myLooper().getThread().getName());
                 List<Stock> stocks = stockList.getStockList();
-                Log.d("MQTT", "MQTT post" + stocks.size());
                 mStocksSubject.onNext(stocks);
             }
         });

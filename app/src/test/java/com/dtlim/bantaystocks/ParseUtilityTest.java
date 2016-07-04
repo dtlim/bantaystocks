@@ -10,7 +10,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class ParseUtilityTest {
     @Test
-    public void testValidateStockList() throws Exception {
+    public void testParseSingleStockFromJson() {
+
+    }
+
+    @Test
+    public void testParseStockListFromJson() {
 
     }
 }

@@ -39,7 +39,7 @@ public class StockDao extends BaseDao<Stock>{
     }
 
     @Override
-    protected List<Stock> parseCursor(Cursor cursor) {
+    public List<Stock> parseCursor(Cursor cursor) {
         List<Stock> stockList = new ArrayList<>();
 
         try{
