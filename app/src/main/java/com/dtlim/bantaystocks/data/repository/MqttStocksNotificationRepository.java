@@ -4,7 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.data.model.StockList;
 import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -24,8 +26,9 @@ import rx.subjects.PublishSubject;
  */
 public class MqttStocksNotificationRepository implements StocksNotificationRepository {
 
-    public static final String MQTT_SERVER_URI = "tcp://broker.mqttdashboard.com:1883";
+    public static final String MQTT_SERVER_URI = "tcp://api.brandx.dev.voyager.ph:1883";
     public static final String TOPIC_PREFIX = "dale/stocks/";
+    public static final Gson gson = new Gson();
 
     private MqttClient mClient;
     PublishSubject mStocksSubject;
@@ -113,14 +116,37 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     }
 
     private void publishStocks(String message) {
-        final Stock stock = new Gson().fromJson(message, Stock.class);
+        Stock stock;
+        StockList stockList;
+        Log.d("MQTT", "MQTT start parsing " + message);
+        if((stock = ParseUtility.parseSingleStockFromJson(message)) != null) {
+            publishSingleStock(stock);
+        }
+        else if((stockList = ParseUtility.parseStockListFromJson(message)) != null) {
+            publishStockList(stockList);
+        }
         Log.d("MQTT", "MQTT finish parsing ");
+    }
+
+    private void publishSingleStock(final Stock stock) {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 Log.d("MQTT", "MQTT start post " + Looper.myLooper().getThread().getName());
                 List<Stock> stocks = new ArrayList<Stock>();
                 stocks.add(stock);
+                Log.d("MQTT", "MQTT post" + stocks.size());
+                mStocksSubject.onNext(stocks);
+            }
+        });
+    }
+
+    private void publishStockList(final StockList stockList) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("MQTT", "MQTT start post " + Looper.myLooper().getThread().getName());
+                List<Stock> stocks = stockList.getStockList();
                 Log.d("MQTT", "MQTT post" + stocks.size());
                 mStocksSubject.onNext(stocks);
             }

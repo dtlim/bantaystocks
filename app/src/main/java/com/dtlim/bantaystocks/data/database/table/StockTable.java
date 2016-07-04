@@ -23,7 +23,7 @@ public class StockTable implements BaseColumns {
             + PERCENT_CHANGE        +       " TEXT, "
             + VOLUME                +       " TEXT, "
             + SYMBOL                +       " TEXT, "
-            + "UNIQUE (" + _ID + ") ON CONFLICT REPLACE);";
+            + "UNIQUE (" + NAME + ") ON CONFLICT REPLACE);";
 
     public static final String DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 }

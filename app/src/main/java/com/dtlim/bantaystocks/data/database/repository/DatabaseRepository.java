@@ -2,6 +2,8 @@ package com.dtlim.bantaystocks.data.database.repository;
 
 import com.dtlim.bantaystocks.data.model.Stock;
 
+import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -9,6 +11,7 @@ import rx.Observable;
  */
 public interface DatabaseRepository {
     long insert(Stock stock);
+    long insert(List<Stock> stocks);
     long update(Stock stock);
     long delete(Stock stock);
     Observable queryStocks();

@@ -100,11 +100,7 @@ public class StocksNotificationService extends Service {
     }
 
     private void saveStocksToDb(List<Stock> stocks) {
-        for(int i=0; i<stocks.size(); i++) {
-            if(mDatabaseRepository.update(stocks.get(i)) <= 0) {
-                mDatabaseRepository.insert(stocks.get(i));
-            }
-        }
+        mDatabaseRepository.insert(stocks);
     }
 
     private void subscribeToStocksFromSharedPreferences(SharedPreferences sharedPreferences) {

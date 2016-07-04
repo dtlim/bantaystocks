@@ -38,18 +38,31 @@ public class FakeStocksNotificationRepository implements StocksNotificationRepos
     @Override
     public Observable<List<Stock>> getStocks() {
         final List<Stock> stocks = DummyModels.getDummyStockList();
-        return Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread()).timeInterval()
-                .flatMap(new Func1<TimeInterval<Long>, Observable<List<Stock>>>() {
-                    @Override
-                    public Observable<List<Stock>> call(TimeInterval<Long> longTimeInterval) {
-                        int i = random.nextInt(stocks.size());
-                        List<Stock> list = new ArrayList<>();
-                        Stock stock = stocks.get(i);
-                        stock.setPrice(new Price("PHP", random.nextInt(10000) + ".00"));
-                        stock.setPercentChange(random.nextInt(200) - 100 + ".00");
-                        list.add(stock);
-                        return Observable.just(list);
-                    }
-                });
+//        return Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread()).timeInterval()
+//                .flatMap(new Func1<TimeInterval<Long>, Observable<List<Stock>>>() {
+//                    @Override
+//                    public Observable<List<Stock>> call(TimeInterval<Long> longTimeInterval) {
+//                        int i = random.nextInt(stocks.size());
+//                        List<Stock> list = new ArrayList<>();
+//                        Stock stock = stocks.get(i);
+//                        stock.setPrice(new Price("PHP", random.nextInt(10000) + ".00"));
+//                        stock.setPercentChange(random.nextInt(200) - 100 + ".00");
+//                        list.add(stock);
+//                        return Observable.just(list);
+//                    }
+//                });
+            return Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread()).timeInterval()
+            .flatMap(new Func1<TimeInterval<Long>, Observable<List<Stock>>>() {
+                @Override
+                public Observable<List<Stock>> call(TimeInterval<Long> longTimeInterval) {
+                    int i = random.nextInt(stocks.size());
+                    List<Stock> list = new ArrayList<>();
+                    Stock stock = stocks.get(i);
+                    stock.setPrice(new Price("PHP", random.nextInt(10000) + ".00"));
+                    stock.setPercentChange(random.nextInt(200) - 100 + ".00");
+                    list.add(stock);
+                    return Observable.just(list);
+                }
+            });
     }
 }

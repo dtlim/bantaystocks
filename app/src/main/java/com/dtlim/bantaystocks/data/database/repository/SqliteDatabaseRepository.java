@@ -6,6 +6,8 @@ import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -25,6 +27,11 @@ public class SqliteDatabaseRepository implements DatabaseRepository{
     @Override
     public long insert(Stock stock) {
         return mStockDao.insert(stock);
+    }
+
+    @Override
+    public long insert(List<Stock> stocks) {
+        return mStockDao.insert(stocks);
     }
 
     @Override
