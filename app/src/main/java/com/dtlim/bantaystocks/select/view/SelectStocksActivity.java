@@ -77,4 +77,6 @@ public class SelectStocksActivity extends AppCompatActivity implements SelectSto
     public void setSubscribedStocks(String[] subscribedStocks) {
         mSelectAdapter.setSubscribedStocks(subscribedStocks);
     }
+
+
 }

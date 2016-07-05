@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.dtlim.bantaystocks.dummy.DummyModels;
 import com.dtlim.bantaystocks.home.adapter.HomeStocksAdapter;
 import com.dtlim.bantaystocks.home.presenter.HomePresenter;
 import com.dtlim.bantaystocks.home.presenter.impl.HomePresenterImpl;
+import com.dtlim.bantaystocks.select.view.SelectStocksActivity;
 
 import java.util.List;
 
@@ -36,8 +38,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     Toolbar mToolbar;
     @BindView(R.id.bantaystocks_main_recyclerview)
     RecyclerView mRecyclerView;
-    @BindView(R.id.button_start_display_service)
-    Button mButton;
+    @BindView(R.id.bantaystocks_main_fab)
+    FloatingActionButton mFloatingActionButton;
 
     private HomeStocksAdapter mAdapter;
     private HomePresenter mHomePresenter;
@@ -51,14 +53,15 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         initializeToolbar();
         initializeList();
         initializePresenter();
+        initializeListeners();
+    }
 
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptToShowStockTicker();
-                changeSharedPref();
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mHomePresenter != null) {
+            mHomePresenter.initializeData();
+        }
     }
 
     private void initializeToolbar() {
@@ -81,7 +84,15 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
                 BantayStocksApplication.getSharedPreferencesRepository();
         mHomePresenter = new HomePresenterImpl(databaseRepository, sharedPreferencesRepository);
         mHomePresenter.bindView(this);
-        mHomePresenter.initializeData();
+    }
+
+    private void initializeListeners() {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSelectStocksActivity();
+            }
+        });
     }
 
     @Override
@@ -109,6 +120,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         String packageName = getApplicationContext().getPackageName();
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + packageName));
+        startActivity(intent);
+    }
+
+    private void startSelectStocksActivity() {
+        Intent intent = new Intent(HomeActivity.this, SelectStocksActivity.class);
         startActivity(intent);
     }
 
