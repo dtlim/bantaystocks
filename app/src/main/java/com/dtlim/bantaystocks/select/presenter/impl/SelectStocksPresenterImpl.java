@@ -2,6 +2,7 @@ package com.dtlim.bantaystocks.select.presenter.impl;
 
 import android.database.Cursor;
 
+import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
@@ -29,21 +30,6 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
                              SharedPreferencesRepository sharedPreferencesRepository) {
         mDatabaseRepository = databaseRepository;
         mSharedPreferencesRepository = sharedPreferencesRepository;
-
-//        Observable<SqlBrite.Query> stocks = mDatabaseRepository.queryStocks();
-//
-//        stocks.subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<SqlBrite.Query>() {
-//                    @Override
-//                    public void call(SqlBrite.Query query) {
-//                        Cursor cursor = query.run();
-//                        List<Stock> list = parseCursor(cursor);
-//                        if(list != null && !list.isEmpty()) {
-//                            mHomeView.setSubscribedStocks(list);
-//                        }
-//                    }
-//                });
     }
 
     @Override
@@ -51,6 +37,21 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
         mSelectView = view;
     }
 
+    @Override
+    public void initializeDataFromDatabase() {
+        Observable<List<Stock>> stocks = mDatabaseRepository.queryStocks();
+        final String[] subscribedStocks = ParseUtility.parseStockList(
+                mSharedPreferencesRepository.getSubscribedStocks());
 
+        stocks.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Stock>>() {
+                    @Override
+                    public void call(List<Stock> stocks) {
+                        mSelectView.setStocks(stocks);
+                        mSelectView.setSubscribedStocks(subscribedStocks);
+                    }
+                });
+    }
 
 }

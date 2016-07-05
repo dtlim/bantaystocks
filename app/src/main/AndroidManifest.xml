@@ -13,27 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".home.view.HomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".select.view.SelectStocksActivity">
-        </activity>
-
         <!--<activity android:name=".home.view.HomeActivity">-->
-        <!--</activity>-->
-
-        <!--<activity android:name=".select.view.SelectStocksActivity">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         <!--</activity>-->
+
+        <!--<activity android:name=".select.view.SelectStocksActivity">-->
+        <!--</activity>-->
+
+        <activity android:name=".home.view.HomeActivity">
+        </activity>
+
+        <activity android:name=".select.view.SelectStocksActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".data.service.StocksDisplayService" />
 

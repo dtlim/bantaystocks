@@ -7,4 +7,5 @@ import com.dtlim.bantaystocks.select.view.SelectStocksView;
  */
 public interface SelectStocksPresenter {
     void bindView(SelectStocksView view);
+    void initializeDataFromDatabase();
 }
