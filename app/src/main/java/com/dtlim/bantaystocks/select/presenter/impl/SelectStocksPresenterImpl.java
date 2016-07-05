@@ -40,8 +40,7 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
     @Override
     public void initializeDataFromDatabase() {
         Observable<List<Stock>> stocks = mDatabaseRepository.queryStocks();
-        final String[] subscribedStocks = ParseUtility.parseStockList(
-                mSharedPreferencesRepository.getSubscribedStocks());
+
 
         stocks.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,9 +48,15 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
                     @Override
                     public void call(List<Stock> stocks) {
                         mSelectView.setStocks(stocks);
-                        mSelectView.setSubscribedStocks(subscribedStocks);
                     }
                 });
+    }
+
+    @Override
+    public void initializeSubscribedStocks() {
+        final String[] subscribedStocks = ParseUtility.parseStockList(
+                mSharedPreferencesRepository.getSubscribedStocks());
+        mSelectView.setSubscribedStocks(subscribedStocks);
     }
 
     @Override

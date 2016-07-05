@@ -34,8 +34,6 @@ public class StocksNotificationService extends Service {
 
     private StocksNotificationRepository mStocksNotificationRepository = new MqttStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferencesListener;
 
     public void onCreate() {
         super.onCreate();
@@ -55,20 +53,6 @@ public class StocksNotificationService extends Service {
 
     private void initialize() {
         Log.d("MQTT", "MQTT start notif service");
-////        mSharedPreferences = getSharedPreferences(".bantayStocksPref", Context.MODE_PRIVATE);
-//
-//        mSharedPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-//            @Override
-//            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//                Log.d("MQTT", "MQTT detected shared prefs change " + key + " " + sharedPreferences.getString(key, ""));
-//                if(key.equals(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS)) {
-//                    subscribeToStocksFromSharedPreferences(sharedPreferences);
-//                }
-//            }
-//        };
-//
-//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        mSharedPreferences.registerOnSharedPreferenceChangeListener(mSharedPreferencesListener);
         subscribeToAllStocks();
         mStocksNotificationRepository.getStocks()
                 .subscribeOn(Schedulers.newThread())
@@ -100,17 +84,6 @@ public class StocksNotificationService extends Service {
 
     private void saveStocksToDb(List<Stock> stocks) {
         mDatabaseRepository.insert(stocks);
-    }
-
-    // TODO delete this, only used for individual stock subscription, which is slow
-    private void subscribeToStocksFromSharedPreferences(SharedPreferences sharedPreferences) {
-        String stocks = sharedPreferences.getString(LocalSharedPreferencesRepository.KEY_SUBSCRIBED_STOCKS, "");
-        String[] stockList = ParseUtility.parseStockList(stocks);
-        for (int i = 0; i < stockList.length; i++) {
-            stockList[i] = "dale/stocks/" + stockList[i];
-        }
-        mStocksNotificationRepository.unsubscribeAll();
-        mStocksNotificationRepository.subscribe(stockList);
     }
 
     private void subscribeToAllStocks() {

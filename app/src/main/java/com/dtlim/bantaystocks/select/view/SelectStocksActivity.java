@@ -74,7 +74,6 @@ public class SelectStocksActivity extends AppCompatActivity implements SelectSto
 
     private void initializeList() {
         mSelectAdapter = new SelectStocksAdapter(this);
-        mSelectAdapter.setStockList(DummyModels.getDummyStockList());
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mSelectAdapter);
@@ -88,6 +87,7 @@ public class SelectStocksActivity extends AppCompatActivity implements SelectSto
         mSelectPresenter = new SelectStocksPresenterImpl(databaseRepository, sharedPreferencesRepository);
         mSelectPresenter.bindView(this);
         mSelectPresenter.initializeDataFromDatabase();
+        mSelectPresenter.initializeSubscribedStocks();
     }
 
     @Override
