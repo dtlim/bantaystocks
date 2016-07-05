@@ -15,6 +15,15 @@ public class ParseUtility {
         return stockList.split(",");
     }
 
+    public static String encodeStockList(String[] stockList) {
+        StringBuilder encoded = new StringBuilder();
+        for(int i=0; i<stockList.length; i++) {
+            encoded.append(stockList[i]);
+            encoded.append((i == stockList.length-1 ? "" : ","));
+        }
+        return encoded.toString();
+    }
+
     public static Stock parseSingleStockFromJson(String json) {
         try {
             return gson.fromJson(json, Stock.class);

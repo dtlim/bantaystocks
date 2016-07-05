@@ -1,10 +1,12 @@
 package com.dtlim.bantaystocks.select.view;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
 import com.dtlim.bantaystocks.R;
@@ -42,6 +44,23 @@ public class SelectStocksActivity extends AppCompatActivity implements SelectSto
         initializeToolbar();
         initializeList();
         initializePresenter();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mSelectPresenter.saveSubscribedStocks(mSelectAdapter.getSubscribedStocks());
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mSelectPresenter.saveSubscribedStocks(mSelectAdapter.getSubscribedStocks());
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeToolbar() {

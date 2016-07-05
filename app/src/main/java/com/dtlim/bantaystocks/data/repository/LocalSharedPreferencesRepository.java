@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.dtlim.bantaystocks.common.utility.ParseUtility;
+
 /**
  * Created by dale on 7/1/16.
  */
@@ -19,16 +21,18 @@ public class LocalSharedPreferencesRepository implements SharedPreferencesReposi
     }
 
     @Override
-    public void saveSubscribedStocks(String stocks) {
+    public void saveSubscribedStocks(String[] stocks) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(KEY_SUBSCRIBED_STOCKS, stocks);
+        String stockList = ParseUtility.encodeStockList(stocks);
+        editor.putString(KEY_SUBSCRIBED_STOCKS, stockList);
         editor.apply();
     }
 
     @Override
-    public void saveWatchedStocks(String stocks) {
+    public void saveWatchedStocks(String[] stocks) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(KEY_WATCHED_STOCKS, stocks);
+        String stockList = ParseUtility.encodeStockList(stocks);
+        editor.putString(KEY_WATCHED_STOCKS, stockList);
         editor.apply();
     }
 

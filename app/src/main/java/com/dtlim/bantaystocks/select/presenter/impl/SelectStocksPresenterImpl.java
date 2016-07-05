@@ -54,4 +54,9 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
                 });
     }
 
+    @Override
+    public void saveSubscribedStocks(String[] stockSymbols) {
+        mSharedPreferencesRepository.saveSubscribedStocks(stockSymbols);
+    }
+
 }
