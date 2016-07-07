@@ -95,8 +95,8 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
                 });
 
         mSharedPreferencesRepository.registerSharedPreferencesListener(this);
-
         initializeForeground();
+        onPreferenceChanged();
     }
 
     private void initializeForeground() {
@@ -152,6 +152,11 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
             String currentStock = watchedStocks.get(i);
             if(!hashMapKeys.contains(currentStock) || mStockItems.get(currentStock) == null) {
                 HomescreenStockItem item = createHomescreenStockView();
+                Stock dummy = new Stock();
+                dummy.setSymbol(currentStock);
+                dummy.setPrice(new Price("PHP", "--"));
+                dummy.setPercentChange("--");
+                item.setStock(dummy);
                 mStockItems.put(currentStock, item);
             }
             mStockItems.get(currentStock).setVisibility(View.VISIBLE);

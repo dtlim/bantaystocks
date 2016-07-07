@@ -97,24 +97,34 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.textViewPrice.setText(currentStock.getPrice().getAmount());
         holder.textViewPercentChange.setText(currentStock.getPercentChange());
 
-        float percentage = Float.valueOf(currentStock.getPercentChange());
-        if(percentage > 0) {
-            holder.textViewPrice.setTextColor(
-                    ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_up_green));
-            holder.textViewPercentChange.setTextColor(
-                    ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_up_green));
-            holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
-                    ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_ticker_up), null, null, null);
+        try {
+            float percentage = Float.valueOf(currentStock.getPercentChange());
+            if (percentage > 0) {
+                holder.textViewPrice.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_up_green));
+                holder.textViewPercentChange.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_up_green));
+                holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
+                        ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_ticker_up), null, null, null);
+            }
+            else if (percentage < 0) {
+                holder.textViewPrice.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_down_red));
+                holder.textViewPercentChange.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_down_red));
+                holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
+                        ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_ticker_down), null, null, null);
+            }
+            else {
+                holder.textViewPrice.setTextColor(
+                        ContextCompat.getColor(mContext, android.R.color.primary_text_dark));
+                holder.textViewPercentChange.setTextColor(
+                        ContextCompat.getColor(mContext, android.R.color.primary_text_dark));
+                holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
+                        null, null, null, null);
+            }
         }
-        else if(percentage < 0) {
-            holder.textViewPrice.setTextColor(
-                    ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_down_red));
-            holder.textViewPercentChange.setTextColor(
-                    ContextCompat.getColor(mContext, R.color.bantaystocks_color_stock_price_down_red));
-            holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
-                    ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_ticker_down), null, null, null);
-        }
-        else {
+        catch(NumberFormatException e) {
             holder.textViewPrice.setTextColor(
                     ContextCompat.getColor(mContext, android.R.color.primary_text_dark));
             holder.textViewPercentChange.setTextColor(
