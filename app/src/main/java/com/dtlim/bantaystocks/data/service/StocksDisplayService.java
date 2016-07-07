@@ -9,8 +9,10 @@ import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
@@ -28,6 +30,7 @@ import com.squareup.sqlbrite.SqlBrite;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -139,15 +142,25 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
 
     @Override
     public void onPreferenceChanged() {
-        List<String> watchedStocks = Arrays.asList(
-                ParseUtility.parseStockList(mSharedPreferencesRepository.getWatchedStocks()));
+        String watchedStocksPrefs = mSharedPreferencesRepository.getWatchedStocks();
+        List<String> watchedStocks = TextUtils.isEmpty(watchedStocksPrefs) ? new ArrayList<String>()
+                : Arrays.asList(ParseUtility.parseStockList(watchedStocksPrefs));
         Collection<String> hashMapKeys = mStockItems.keySet();
 
+        // Add or show stocks in prefs
         for(int i=0; i<watchedStocks.size(); i++) {
             String currentStock = watchedStocks.get(i);
-            if(!hashMapKeys.contains(currentStock)) {
+            if(!hashMapKeys.contains(currentStock) || mStockItems.get(currentStock) == null) {
                 HomescreenStockItem item = createHomescreenStockView();
                 mStockItems.put(currentStock, item);
+            }
+            mStockItems.get(currentStock).setVisibility(View.VISIBLE);
+        }
+
+        // Hide stocks not in prefs
+        for(String key : mStockItems.keySet()) {
+            if(!watchedStocks.contains(key) && mStockItems.get(key) != null) {
+                mStockItems.get(key).setVisibility(View.GONE);
             }
         }
     }

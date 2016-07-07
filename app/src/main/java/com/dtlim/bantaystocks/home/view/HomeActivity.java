@@ -108,21 +108,23 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
 
     @Override
     public void onClickWatch(Stock stock) {
-        mHomePresenter.watchStock(stock);
+        attemptToShowHomescreenTicker(stock);
     }
 
     // https://developer.android.com/reference/android/Manifest.permission.html#SYSTEM_ALERT_WINDOW
-    private void attemptToShowStockTicker() {
+    private void attemptToShowHomescreenTicker(Stock stock) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(Settings.canDrawOverlays(this)) {
-                ((BantayStocksApplication) getApplication()).startStocksDisplayService();
+                //((BantayStocksApplication) getApplication()).startStocksDisplayService();
+                mHomePresenter.watchStock(stock);
             }
             else {
                 requestDrawOverOtherAppsPermission();
             }
         }
         else {
-            ((BantayStocksApplication) getApplication()).startStocksDisplayService();
+            //((BantayStocksApplication) getApplication()).startStocksDisplayService();
+            mHomePresenter.watchStock(stock);
         }
     }
 
@@ -137,12 +139,5 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
     private void startSelectStocksActivity() {
         Intent intent = new Intent(HomeActivity.this, SelectStocksActivity.class);
         startActivity(intent);
-    }
-
-    private void changeSharedPref() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("WATCHED_STOCKS", "hhhjgjg");
-        editor.apply();
     }
 }

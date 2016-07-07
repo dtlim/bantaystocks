@@ -1,5 +1,7 @@
 package com.dtlim.bantaystocks.common.utility;
 
+import android.util.Log;
+
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.model.StockList;
 import com.google.gson.Gson;
@@ -12,10 +14,13 @@ public class ParseUtility {
     private ParseUtility() {}
 
     public static String[] parseStockList(String stockList) {
-        return stockList.split(",");
+        return stockList.trim().isEmpty() ? new String[]{} : stockList.split(",");
     }
 
     public static String encodeStockList(String[] stockList) {
+        if(stockList==null || stockList.length <= 0) {
+            return "";
+        }
         StringBuilder encoded = new StringBuilder();
         for(int i=0; i<stockList.length; i++) {
             encoded.append(stockList[i]);
