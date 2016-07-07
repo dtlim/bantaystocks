@@ -32,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity implements HomeView {
+public class HomeActivity extends AppCompatActivity implements HomeView, HomeStocksAdapter.Listener {
 
     @BindView(R.id.bantaystocks_toolbar)
     Toolbar mToolbar;
@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     private void initializeList() {
         mAdapter = new HomeStocksAdapter(this);
         mAdapter.setStockList(DummyModels.getDummyStockList());
+        mAdapter.setListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -103,6 +104,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
     @Override
     public void setWatchedStocks(String[] stocks) {
         mAdapter.setWatchedStocks(stocks);
+    }
+
+    @Override
+    public void onClickWatch(Stock stock) {
+        mHomePresenter.watchStock(stock);
     }
 
     // https://developer.android.com/reference/android/Manifest.permission.html#SYSTEM_ALERT_WINDOW

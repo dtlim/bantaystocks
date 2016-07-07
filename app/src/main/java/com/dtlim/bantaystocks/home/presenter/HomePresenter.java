@@ -11,4 +11,5 @@ import java.util.List;
 public interface HomePresenter {
     void bindView(HomeView view);
     void initializeData();
+    void watchStock(Stock stock);
 }

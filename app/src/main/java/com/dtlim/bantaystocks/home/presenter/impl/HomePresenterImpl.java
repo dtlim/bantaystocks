@@ -1,20 +1,14 @@
 package com.dtlim.bantaystocks.home.presenter.impl;
 
-import android.database.Cursor;
-
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
-import com.dtlim.bantaystocks.data.database.Database;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
-import com.dtlim.bantaystocks.data.database.repository.SqliteDatabaseRepository;
-import com.dtlim.bantaystocks.data.database.table.StockTable;
-import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.home.presenter.HomePresenter;
 import com.dtlim.bantaystocks.home.view.HomeView;
-import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
@@ -44,11 +38,25 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void initializeData() {
-        getStocksFromSharedPreferences();
-        getWatchedStocksFromSharedPreferences();
+        setStocksFromSharedPreferences();
+        setWatchedStocksFromSharedPreferences();
     }
 
-    private void getStocksFromSharedPreferences() {
+    @Override
+    public void watchStock(Stock stock) {
+        String[] list = ParseUtility.parseStockList(mSharedPreferencesRepository.getWatchedStocks());
+        ArrayList<String> stocks = new ArrayList<String>(Arrays.asList(list));
+        if(stocks.contains(stock.getSymbol())) {
+            stocks.remove(stock.getSymbol());
+        }
+        else {
+            stocks.add(stock.getSymbol());
+        }
+        mSharedPreferencesRepository.saveWatchedStocks(stocks.toArray(new String[stocks.size()]));
+        setWatchedStocksFromSharedPreferences();
+    }
+
+    private void setStocksFromSharedPreferences() {
         String subscribedStocks = mSharedPreferencesRepository.getSubscribedStocks();
         String[] subscribedStocksList = ParseUtility.parseStockList(subscribedStocks);
 
@@ -66,7 +74,7 @@ public class HomePresenterImpl implements HomePresenter {
                 });
     }
 
-    private void getWatchedStocksFromSharedPreferences() {
+    private void setWatchedStocksFromSharedPreferences() {
         String watchedStocks = mSharedPreferencesRepository.getWatchedStocks();
         String[] watchedStocksList = ParseUtility.parseStockList(watchedStocks);
         mHomeView.setWatchedStocks(watchedStocksList);

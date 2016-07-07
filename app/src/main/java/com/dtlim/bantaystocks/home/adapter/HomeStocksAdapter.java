@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
@@ -24,9 +25,14 @@ import butterknife.ButterKnife;
  */
 public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public interface Listener {
+        void onClickWatch(Stock stock);
+    }
+
     private List<Stock> mListStocks;
     private List<String> mWatchedStocks;
     private Context mContext;
+    private Listener mListener;
 
     protected static class StockViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.bantaystocks_stock_item_symbol)
@@ -38,7 +44,7 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @BindView(R.id.bantaystocks_stock_item_percent_change)
         public TextView textViewPercentChange;
         @BindView(R.id.bantaystocks_stock_item_watch_button)
-        public BantayStockButton watchButton;
+        public ImageView watchButton;
 
         public StockViewHolder(View itemView) {
             super(itemView);
@@ -63,6 +69,10 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    public void setListener(Listener listener) {
+        mListener = listener;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
@@ -81,7 +91,7 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void bindStockViewHolder(StockViewHolder holder, int position) {
-        Stock currentStock = mListStocks.get(position);
+        final Stock currentStock = mListStocks.get(position);
         holder.textViewName.setText(currentStock.getName());
         holder.textViewSymbol.setText(currentStock.getSymbol());
         holder.textViewPrice.setText(currentStock.getPrice().getAmount());
@@ -113,6 +123,16 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     null, null, null, null);
         }
 
-        holder.watchButton.setIsWatched(mWatchedStocks.contains(currentStock.getSymbol()));
+//        holder.watchButton.setIsWatched(mWatchedStocks.contains(currentStock.getSymbol()));
+        holder.watchButton.setImageDrawable(mWatchedStocks.contains(currentStock.getSymbol()) ?
+                ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_icon_watch_stock_enabled) :
+                ContextCompat.getDrawable(mContext, R.drawable.bantaystocks_icon_watch_stock_disabled));
+
+        holder.watchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickWatch(currentStock);
+            }
+        });
     }
 }
