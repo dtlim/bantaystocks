@@ -14,16 +14,21 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
+import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.home.view.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
 import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
@@ -34,11 +39,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by dale on 6/23/16.
  */
-public class StocksDisplayService extends Service {
+public class StocksDisplayService extends Service implements SharedPreferencesRepository.Listener{
 
     private WindowManager mWindowManager;
-    private HomescreenStockItem mStockItem;
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
+    private SharedPreferencesRepository mSharedPreferencesRepository =
+            BantayStocksApplication.getSharedPreferencesRepository();
+
+    private HashMap<String, HomescreenStockItem> mStockItems;
 
     @Override
     public void onCreate() {
@@ -49,8 +57,9 @@ public class StocksDisplayService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mStockItem != null) {
-            mWindowManager.removeView(mStockItem);
+        mSharedPreferencesRepository.unregisterSharedPreferencesListener(this);
+        for(String key : mStockItems.keySet()) {
+            mWindowManager.removeView(mStockItems.get(key));
         }
     }
 
@@ -67,6 +76,8 @@ public class StocksDisplayService extends Service {
 
     private void initialize() {
         Log.d("MQTT", "MQTT start display service");
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mStockItems = new HashMap<>();
         Observable<List<Stock>> stocksObservable = mDatabaseRepository.queryStocks();
 
         stocksObservable.subscribeOn(Schedulers.newThread())
@@ -80,8 +91,9 @@ public class StocksDisplayService extends Service {
                     }
                 });
 
+        mSharedPreferencesRepository.registerSharedPreferencesListener(this);
+
         initializeForeground();
-        addHomescreenStockView();
     }
 
     private void initializeForeground() {
@@ -98,9 +110,8 @@ public class StocksDisplayService extends Service {
         startForeground(9999, notification);
     }
 
-    private void addHomescreenStockView() {
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mStockItem = new HomescreenStockItem(this);
+    private HomescreenStockItem createHomescreenStockView() {
+        HomescreenStockItem stockItem = new HomescreenStockItem(this);
         final WindowManager.LayoutParams params= new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -111,11 +122,33 @@ public class StocksDisplayService extends Service {
         params.x = 0;
         params.y = 100;
 
-        mStockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, params));
-        mWindowManager.addView(mStockItem, params);
+        stockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, params));
+        mWindowManager.addView(stockItem, params);
+        return stockItem;
     }
 
     private void updateHomeStocksView(List<Stock> stocks) {
-        mStockItem.setStock(stocks.get(0));
+        for(int i=0; i<stocks.size(); i++) {
+            Stock currentStock = stocks.get(i);
+            if(mStockItems.get(currentStock.getSymbol()) != null) {
+                HomescreenStockItem currentItem = mStockItems.get(currentStock.getSymbol());
+                currentItem.setStock(currentStock);
+            }
+        }
+    }
+
+    @Override
+    public void onPreferenceChanged() {
+        List<String> watchedStocks = Arrays.asList(
+                ParseUtility.parseStockList(mSharedPreferencesRepository.getWatchedStocks()));
+        Collection<String> hashMapKeys = mStockItems.keySet();
+
+        for(int i=0; i<watchedStocks.size(); i++) {
+            String currentStock = watchedStocks.get(i);
+            if(!hashMapKeys.contains(currentStock)) {
+                HomescreenStockItem item = createHomescreenStockView();
+                mStockItems.put(currentStock, item);
+            }
+        }
     }
 }

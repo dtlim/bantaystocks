@@ -1,5 +1,7 @@
 package com.dtlim.bantaystocks.home.presenter.impl;
 
+import android.util.Log;
+
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
@@ -45,7 +47,8 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void watchStock(Stock stock) {
         String[] list = ParseUtility.parseStockList(mSharedPreferencesRepository.getWatchedStocks());
-        ArrayList<String> stocks = new ArrayList<String>(Arrays.asList(list));
+        ArrayList<String> stocks = new ArrayList<>(Arrays.asList(list));
+        Log.d("PREFZ", "PREFZ press on " + stock.getSymbol());
         if(stocks.contains(stock.getSymbol())) {
             stocks.remove(stock.getSymbol());
         }
@@ -53,6 +56,7 @@ public class HomePresenterImpl implements HomePresenter {
             stocks.add(stock.getSymbol());
         }
         mSharedPreferencesRepository.saveWatchedStocks(stocks.toArray(new String[stocks.size()]));
+        Log.d("PREFZ", "PREFZ save watched stocks " + mSharedPreferencesRepository.getWatchedStocks());
         setWatchedStocksFromSharedPreferences();
     }
 
