@@ -66,6 +66,7 @@
         </LinearLayout>
 
         <com.dtlim.bantaystocks.home.customview.BantayStockButton
+            android:id="@+id/bantaystocks_stock_item_watch_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

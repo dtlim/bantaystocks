@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
 import com.dtlim.bantaystocks.data.model.Stock;
+import com.dtlim.bantaystocks.home.customview.BantayStockButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,6 +25,7 @@ import butterknife.ButterKnife;
 public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Stock> mListStocks;
+    private List<String> mWatchedStocks;
     private Context mContext;
 
     protected static class StockViewHolder extends RecyclerView.ViewHolder{
@@ -34,6 +37,8 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public TextView textViewPrice;
         @BindView(R.id.bantaystocks_stock_item_percent_change)
         public TextView textViewPercentChange;
+        @BindView(R.id.bantaystocks_stock_item_watch_button)
+        public BantayStockButton watchButton;
 
         public StockViewHolder(View itemView) {
             super(itemView);
@@ -44,10 +49,17 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public HomeStocksAdapter(Context context) {
         mContext = context;
         mListStocks = new ArrayList<>();
+        mWatchedStocks = new ArrayList<>();
     }
 
     public void setStockList(List<Stock> list) {
         mListStocks = list;
+        notifyDataSetChanged();
+    }
+
+    public void setWatchedStocks(String[] stocks) {
+        mWatchedStocks.clear();
+        mWatchedStocks.addAll(Arrays.asList(stocks));
         notifyDataSetChanged();
     }
 
@@ -100,5 +112,7 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
                     null, null, null, null);
         }
+
+        holder.watchButton.setIsWatched(mWatchedStocks.contains(currentStock.getSymbol()));
     }
 }

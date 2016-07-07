@@ -45,6 +45,7 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void initializeData() {
         getStocksFromSharedPreferences();
+        getWatchedStocksFromSharedPreferences();
     }
 
     private void getStocksFromSharedPreferences() {
@@ -63,5 +64,11 @@ public class HomePresenterImpl implements HomePresenter {
                         }
                     }
                 });
+    }
+
+    private void getWatchedStocksFromSharedPreferences() {
+        String watchedStocks = mSharedPreferencesRepository.getWatchedStocks();
+        String[] watchedStocksList = ParseUtility.parseStockList(watchedStocks);
+        mHomeView.setWatchedStocks(watchedStocksList);
     }
 }

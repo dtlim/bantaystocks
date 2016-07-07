@@ -100,6 +100,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         mAdapter.setStockList(stocks);
     }
 
+    @Override
+    public void setWatchedStocks(String[] stocks) {
+        mAdapter.setWatchedStocks(stocks);
+    }
+
     // https://developer.android.com/reference/android/Manifest.permission.html#SYSTEM_ALERT_WINDOW
     private void attemptToShowStockTicker() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

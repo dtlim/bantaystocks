@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface HomeView {
     void setSubscribedStocks(List<Stock> stocks);
+    void setWatchedStocks(String[] stocks);
 }

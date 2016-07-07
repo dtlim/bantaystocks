@@ -34,6 +34,7 @@ public class BantayStocksApplication extends Application {
         sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
 
         sSharedPreferencesRepository.saveSubscribedStocks(new String[] {"TEL","MER","2GO","X","TECH","PGOLD","JFC"});
+        sSharedPreferencesRepository.saveWatchedStocks(new String[] {"TEL","PGOLD","JFC"});
     }
 
     public void startStocksDisplayService() {

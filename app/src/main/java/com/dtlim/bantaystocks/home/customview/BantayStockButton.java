@@ -7,9 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.dtlim.bantaystocks.common.utility.BitmapUtility;
@@ -19,13 +20,29 @@ import com.dtlim.bantaystocks.common.utility.BitmapUtility;
  */
 public class BantayStockButton extends ImageView {
 
-    int radius = 7;
+    private boolean isWatched = false;
+
+    private int framerate = 10;
+    int radiusIncrement = 2;
+    int radius = 0;
+    boolean isAnimating = false;
+    boolean isExpanding = false;
+
     Drawable image;
+    Bitmap originalBitmap;
     Bitmap drawableBitmap;
     Canvas bitmapCanvas;
 
     Paint paint = new Paint();
     Paint maskPaint = new Paint();
+
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            invalidate();
+        }
+    };
 
     public BantayStockButton(Context context) {
         super(context);
@@ -44,17 +61,60 @@ public class BantayStockButton extends ImageView {
 
     private void initialize() {
         image = getDrawable();
+        originalBitmap = BitmapUtility.drawableToBitmap(image);
         drawableBitmap = BitmapUtility.drawableToBitmap(image);
         bitmapCanvas = new Canvas(drawableBitmap);
 
         maskPaint.setColor(Color.RED);
         maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+
+        radius = isWatched ? getWidth() : 0;
+    }
+
+    public void setIsWatched(boolean bool) {
+        isWatched = bool;
+        isExpanding = bool;
+        doOnClickAnimation();
+        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        bitmapCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+        if(isAnimating) {
+            drawableBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
+            if(isExpanding) {
+                doExpandingAnimation();
+            }
+            else {
+                doContractingAnimation();
+            }
+        }
+
+        bitmapCanvas.setBitmap(drawableBitmap);
         bitmapCanvas.drawCircle(getWidth()/2, getHeight()/2, radius, maskPaint);
         canvas.drawBitmap(drawableBitmap, 0, 0, paint);
+
+        handler.postDelayed(runnable, framerate);
+    }
+
+    public void doOnClickAnimation() {
+        if(!isAnimating) {
+            isAnimating = true;
+        }
+    }
+
+    private void doExpandingAnimation() {
+        radius += radiusIncrement;
+        if(radius >= getWidth()/2 && radius >= getHeight()/2) {
+            isAnimating = false;
+        }
+    }
+
+    private void doContractingAnimation() {
+        radius -= radiusIncrement;
+        if(radius <= 0) {
+            isAnimating = false;
+        }
     }
 }
