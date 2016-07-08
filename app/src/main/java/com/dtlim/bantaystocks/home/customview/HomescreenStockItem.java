@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
@@ -15,7 +18,13 @@ import butterknife.ButterKnife;
 /**
  * Created by dale on 6/23/16.
  */
-public class HomescreenStockItem extends CardView {
+public class HomescreenStockItem extends CardView implements View.OnClickListener{
+
+    public interface HomescreenStockItemListener {
+        void onCloseButtonClick(Stock stock);
+    }
+
+    private Stock mStock;
 
     @BindView(R.id.bantaystocks_homescreen_stock_item_symbol)
     TextView textViewSymbol;
@@ -23,6 +32,10 @@ public class HomescreenStockItem extends CardView {
     TextView textViewPrice;
     @BindView(R.id.bantaystocks_homescreen_stock_item_percent_change)
     TextView textViewPercentChange;
+    @BindView(R.id.bantaystocks_homescreen_stock_item_close)
+    ViewGroup closeButton;
+
+    private HomescreenStockItemListener mListener;
 
     public HomescreenStockItem(Context context) {
         super(context);
@@ -42,10 +55,17 @@ public class HomescreenStockItem extends CardView {
     private void initialize() {
         inflate(getContext(), R.layout.bantaystocks_homescreen_item, this);
         ButterKnife.bind(this);
+
+        setOnClickListener(this);
+        closeButton.setOnClickListener(this);
+    }
+
+    public void setHomescreenStockItemListener(HomescreenStockItemListener listener) {
+        mListener = listener;
     }
 
     public void setStock(Stock stock) {
-
+        mStock = stock;
         textViewSymbol.setText(stock.getSymbol());
         textViewPrice.setText(stock.getPrice().getAmount());
         textViewPercentChange.setText(stock.getPercentChange());
@@ -83,5 +103,28 @@ public class HomescreenStockItem extends CardView {
             textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
                     null, null, null, null);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d("TOUCHEZ", "TOUCHEZ onclick");
+        switch (v.getId()) {
+            case R.id.bantaystocks_homescreen_stock_item_close: {
+                if(mListener != null && mStock != null) {
+                    mListener.onCloseButtonClick(mStock);
+                    Log.d("TOUCHEZ", "TOUCHEZ onclick close");
+                }
+                break;
+            }
+
+            default: {
+                expandOrContractCloseButton();
+                Log.d("TOUCHEZ", "TOUCHEZ onclick container");
+            }
+        }
+    }
+
+    private void expandOrContractCloseButton() {
+        closeButton.setVisibility(closeButton.getVisibility()==VISIBLE ? GONE : VISIBLE);
     }
 }

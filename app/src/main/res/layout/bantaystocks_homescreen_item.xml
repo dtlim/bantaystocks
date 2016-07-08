@@ -42,7 +42,26 @@
 
     </LinearLayout>
 
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:padding="10dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/bantaystocks_icon_watch_stock_enabled" />-->
 
+    <FrameLayout
+        android:id="@+id/bantaystocks_homescreen_stock_item_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/bantaystocks_icon_watch_stock_enabled" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

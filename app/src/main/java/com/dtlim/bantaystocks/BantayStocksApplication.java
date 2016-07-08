@@ -34,8 +34,7 @@ public class BantayStocksApplication extends Application {
                 new DatabaseHelper(this, "bantaystocks", 1));
         sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
 
-        sSharedPreferencesRepository.saveSubscribedStocks(new String[] {"TEL","MER","2GO","X","TECH","PGOLD","JFC"});
-        sSharedPreferencesRepository.saveWatchedStocks(new String[] {"TEL","PGOLD","JFC"});
+        sSharedPreferencesRepository.saveWatchedStocks(new String[] {});
     }
 
     public void startStocksDisplayService() {

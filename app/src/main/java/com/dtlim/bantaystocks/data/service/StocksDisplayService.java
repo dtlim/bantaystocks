@@ -42,7 +42,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by dale on 6/23/16.
  */
-public class StocksDisplayService extends Service implements SharedPreferencesRepository.Listener{
+public class StocksDisplayService extends Service implements SharedPreferencesRepository.Listener,
+        HomescreenStockItem.HomescreenStockItemListener{
 
     private WindowManager mWindowManager;
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
@@ -96,7 +97,6 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
 
         mSharedPreferencesRepository.registerSharedPreferencesListener(this);
         initializeForeground();
-        onPreferenceChanged();
     }
 
     private void initializeForeground() {
@@ -126,6 +126,7 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
         params.y = 100;
 
         stockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, params));
+        stockItem.setHomescreenStockItemListener(this);
         mWindowManager.addView(stockItem, params);
         return stockItem;
     }
@@ -168,5 +169,13 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
                 mStockItems.get(key).setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void onCloseButtonClick(Stock stock) {
+        String[] list = ParseUtility.parseStockList(mSharedPreferencesRepository.getWatchedStocks());
+        ArrayList<String> stocks = new ArrayList<>(Arrays.asList(list));
+        stocks.remove(stock.getSymbol());
+        mSharedPreferencesRepository.saveWatchedStocks(stocks.toArray(new String[stocks.size()]));
     }
 }

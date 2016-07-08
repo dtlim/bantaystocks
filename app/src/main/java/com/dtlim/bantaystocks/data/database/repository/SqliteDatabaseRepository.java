@@ -8,6 +8,8 @@ import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -60,6 +62,11 @@ public class SqliteDatabaseRepository implements DatabaseRepository{
     }
 
     public Observable<List<Stock>> queryStocks(String... stocks) {
+        if(stocks.length <= 0) {
+            List<Stock> empty = Collections.emptyList();
+            return Observable.just(empty);
+        }
+
         String query = "SELECT * FROM " + StockTable.TABLE_NAME + " WHERE ";
         for(int i=0; i<stocks.length; i++) {
             query += StockTable.SYMBOL + "=?";

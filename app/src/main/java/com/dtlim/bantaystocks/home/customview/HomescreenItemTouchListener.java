@@ -10,10 +10,17 @@ import android.view.WindowManager;
  */
 public class HomescreenItemTouchListener implements View.OnTouchListener {
 
+    private static int THRESHOLD = 10;
+
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mParams;
+    private int startX = 0;
+    private int startY = 0;
     private int dx = 0;
     private int dy = 0;
+    private int offsetX = 0;
+    private int offsetY = 0;
+    private boolean isDragging = false;
 
     public HomescreenItemTouchListener(WindowManager windowManager, WindowManager.LayoutParams params) {
         mWindowManager = windowManager;
@@ -25,22 +32,31 @@ public class HomescreenItemTouchListener implements View.OnTouchListener {
         int touchX = (int) event.getRawX();
         int touchY = (int) event.getRawY();
 
-        Log.d("TOUCHEZ", "TOUCHEZ " + touchX + " " + touchY);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                dx = touchX - mParams.x;
-                dy = touchY - mParams.y;
+                startX = touchX;
+                startY = touchY;
+                offsetX = startX - mParams.x;
+                offsetY = startY - mParams.y;
                 break;
-            case MotionEvent.ACTION_MOVE: {
-                mParams.x = touchX - dx;
-                mParams.y = touchY - dy;
-                mWindowManager.updateViewLayout(view, mParams);
-                break;
-            }
-
-            default:
+            case MotionEvent.ACTION_UP:
+                if(isDragging) {
+                    isDragging = false;
+                    return true;
+                }
                 return false;
+            case MotionEvent.ACTION_MOVE: {
+                dx = touchX - startX;
+                dy = touchY - startY;
+                if(Math.abs(dx) > THRESHOLD || Math.abs(dy) > THRESHOLD) {
+                    mParams.x = touchX - offsetX;
+                    mParams.y = touchY - offsetY;
+                    mWindowManager.updateViewLayout(view, mParams);
+                    isDragging = true;
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 }

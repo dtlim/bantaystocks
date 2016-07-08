@@ -72,7 +72,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
 
     private void initializeList() {
         mAdapter = new HomeStocksAdapter(this);
-        mAdapter.setStockList(DummyModels.getDummyStockList());
         mAdapter.setListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
