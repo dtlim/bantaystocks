@@ -160,13 +160,13 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
                 item.setStock(dummy);
                 mStockItems.put(currentStock, item);
             }
-            mStockItems.get(currentStock).setVisibility(View.VISIBLE);
+            mStockItems.get(currentStock).show();
         }
 
         // Hide stocks not in prefs
         for(String key : mStockItems.keySet()) {
             if(!watchedStocks.contains(key) && mStockItems.get(key) != null) {
-                mStockItems.get(key).setVisibility(View.GONE);
+                mStockItems.get(key).hide();
             }
         }
     }

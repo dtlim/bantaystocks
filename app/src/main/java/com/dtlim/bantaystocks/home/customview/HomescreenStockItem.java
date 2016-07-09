@@ -1,15 +1,18 @@
 package com.dtlim.bantaystocks.home.customview;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
+import com.dtlim.bantaystocks.common.utility.ViewAnimationUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
 
 import butterknife.BindView;
@@ -24,8 +27,10 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
         void onCloseButtonClick(Stock stock);
     }
 
-    private Stock mStock;
+    private static final int ANIMATION_DURATION = 150;
 
+    @BindView(R.id.bantaystocks_homescreen_stock_item_container)
+    ViewGroup container;
     @BindView(R.id.bantaystocks_homescreen_stock_item_symbol)
     TextView textViewSymbol;
     @BindView(R.id.bantaystocks_homescreen_stock_item_price)
@@ -35,7 +40,9 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
     @BindView(R.id.bantaystocks_homescreen_stock_item_close)
     ViewGroup closeButton;
 
+    private Stock mStock;
     private HomescreenStockItemListener mListener;
+    private boolean isShown = false;
 
     public HomescreenStockItem(Context context) {
         super(context);
@@ -58,6 +65,8 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
 
         setOnClickListener(this);
         closeButton.setOnClickListener(this);
+        LayoutTransition transition = new LayoutTransition();
+        setLayoutTransition(transition);
     }
 
     public void setHomescreenStockItemListener(HomescreenStockItemListener listener) {
@@ -107,24 +116,35 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        Log.d("TOUCHEZ", "TOUCHEZ onclick");
         switch (v.getId()) {
             case R.id.bantaystocks_homescreen_stock_item_close: {
                 if(mListener != null && mStock != null) {
                     mListener.onCloseButtonClick(mStock);
-                    Log.d("TOUCHEZ", "TOUCHEZ onclick close");
                 }
                 break;
             }
 
             default: {
                 expandOrContractCloseButton();
-                Log.d("TOUCHEZ", "TOUCHEZ onclick container");
             }
         }
     }
 
     private void expandOrContractCloseButton() {
         closeButton.setVisibility(closeButton.getVisibility()==VISIBLE ? GONE : VISIBLE);
+    }
+
+    public void show() {
+        if(!isShown) {
+            ViewAnimationUtility.playScaleUpAnimation(this, ANIMATION_DURATION, 0);
+            isShown = true;
+        }
+    }
+
+    public void hide() {
+        if(isShown) {
+            ViewAnimationUtility.playScaleDownAnimation(this, ANIMATION_DURATION, 0);
+            isShown = false;
+        }
     }
 }

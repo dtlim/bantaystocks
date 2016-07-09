@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by dale on 7/1/16.
  */
-public class HomePresenterImpl implements HomePresenter {
+public class HomePresenterImpl implements HomePresenter, SharedPreferencesRepository.Listener {
 
     private HomeView mHomeView;
     private DatabaseRepository mDatabaseRepository;
@@ -36,6 +36,17 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void bindView(HomeView view) {
         mHomeView = view;
+    }
+
+    @Override
+    public void onActivityResume() {
+        initializeData();
+        mSharedPreferencesRepository.registerSharedPreferencesListener(this);
+    }
+
+    @Override
+    public void onActivityPause() {
+        mSharedPreferencesRepository.unregisterSharedPreferencesListener(this);
     }
 
     @Override
@@ -80,5 +91,10 @@ public class HomePresenterImpl implements HomePresenter {
         String watchedStocks = mSharedPreferencesRepository.getWatchedStocks();
         String[] watchedStocksList = ParseUtility.parseStockList(watchedStocks);
         mHomeView.setWatchedStocks(watchedStocksList);
+    }
+
+    @Override
+    public void onPreferenceChanged() {
+        setWatchedStocksFromSharedPreferences();
     }
 }

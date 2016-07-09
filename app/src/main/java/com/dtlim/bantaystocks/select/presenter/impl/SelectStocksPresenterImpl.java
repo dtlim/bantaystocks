@@ -64,4 +64,13 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
         mSharedPreferencesRepository.saveSubscribedStocks(stockSymbols);
     }
 
+    @Override
+    public void onActivityResume() {
+
+    }
+
+    @Override
+    public void onActivityPause() {
+
+    }
 }

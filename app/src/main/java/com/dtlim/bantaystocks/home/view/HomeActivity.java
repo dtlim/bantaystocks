@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
     protected void onResume() {
         super.onResume();
         if(mHomePresenter != null) {
-            mHomePresenter.initializeData();
+            mHomePresenter.onActivityResume();
         }
     }
 
