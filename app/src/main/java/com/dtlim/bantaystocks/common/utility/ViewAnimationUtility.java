@@ -1,5 +1,7 @@
 package com.dtlim.bantaystocks.common.utility;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -12,20 +14,41 @@ public class ViewAnimationUtility {
     public static AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     public static DecelerateInterpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
-    public static void playScaleUpAnimation(View view, int duration, int startDelay) {
+    public static void playScaleUpAnimation(final View view, int duration, int startDelay) {
         view.setScaleX(0);
         view.setScaleY(0);
-
+        view.setVisibility(View.VISIBLE);
         view.animate()
                 .scaleX(1)
                 .scaleY(1)
                 .setDuration(duration)
                 .setStartDelay(startDelay)
                 .setInterpolator(ACCELERATE_INTERPOLATOR)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
                 .start();
     }
 
-    public static void playScaleDownAnimation(View view, int duration, int startDelay) {
+    public static void playScaleDownAnimation(final View view, int duration, int startDelay) {
         view.setScaleX(1);
         view.setScaleY(1);
 
@@ -35,6 +58,28 @@ public class ViewAnimationUtility {
                 .setDuration(duration)
                 .setStartDelay(startDelay)
                 .setInterpolator(ACCELERATE_INTERPOLATOR)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(View.GONE);
+                        view.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
                 .start();
     }
 }

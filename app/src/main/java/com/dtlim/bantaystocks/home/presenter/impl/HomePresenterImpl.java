@@ -81,6 +81,7 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
                     @Override
                     public void call(List<Stock> stocks) {
                         if(stocks != null && !stocks.isEmpty()) {
+                            Log.d("REACTZ", "REACTZ call set subscribed stocks home");
                             mHomeView.setSubscribedStocks(stocks);
                         }
                     }

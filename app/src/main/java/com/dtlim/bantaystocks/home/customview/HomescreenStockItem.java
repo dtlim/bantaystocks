@@ -130,12 +130,14 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
         }
     }
 
+    // TODO should do animation
     private void expandOrContractCloseButton() {
         closeButton.setVisibility(closeButton.getVisibility()==VISIBLE ? GONE : VISIBLE);
     }
 
     public void show() {
         if(!isShown) {
+            closeButton.setVisibility(GONE);
             ViewAnimationUtility.playScaleUpAnimation(this, ANIMATION_DURATION, 0);
             isShown = true;
         }

@@ -51,6 +51,7 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
             BantayStocksApplication.getSharedPreferencesRepository();
 
     private HashMap<String, HomescreenStockItem> mStockItems;
+    private List<Stock> mStocks = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -90,6 +91,8 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
                     @Override
                     public void call(List<Stock> stocks) {
                         if(stocks != null && !stocks.isEmpty()) {
+                            Log.d("REACTZ", "REACTZ call set subscribed stocks serbis");
+                            mStocks = stocks;
                             updateHomeStocksView(stocks);
                         }
                     }
@@ -153,11 +156,6 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
             String currentStock = watchedStocks.get(i);
             if(!hashMapKeys.contains(currentStock) || mStockItems.get(currentStock) == null) {
                 HomescreenStockItem item = createHomescreenStockView();
-                Stock dummy = new Stock();
-                dummy.setSymbol(currentStock);
-                dummy.setPrice(new Price("PHP", "--"));
-                dummy.setPercentChange("--");
-                item.setStock(dummy);
                 mStockItems.put(currentStock, item);
             }
             mStockItems.get(currentStock).show();
@@ -169,6 +167,8 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
                 mStockItems.get(key).hide();
             }
         }
+
+        updateHomeStocksView(mStocks);
     }
 
     @Override
