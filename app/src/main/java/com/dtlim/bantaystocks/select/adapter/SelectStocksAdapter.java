@@ -1,6 +1,8 @@
 package com.dtlim.bantaystocks.select.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,6 +110,14 @@ public class SelectStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         else {
             holder.checkBox.setChecked(false);
+        }
+
+        if(position % 2 == 0) {
+            holder.container.setBackgroundColor(ContextCompat.getColor(
+                    mContext, R.color.bantaystocks_color_select_stocks_item_gray));
+        }
+        else {
+            holder.container.setBackgroundColor(Color.WHITE);
         }
     }
 }

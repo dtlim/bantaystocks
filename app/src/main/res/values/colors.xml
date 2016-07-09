@@ -6,4 +6,7 @@
 
     <color name="bantaystocks_color_stock_price_up_green">#4CAF50</color>
     <color name="bantaystocks_color_stock_price_down_red">#F44336</color>
+
+
+    <color name="bantaystocks_color_select_stocks_item_gray">#EEEEEE</color>
 </resources>
