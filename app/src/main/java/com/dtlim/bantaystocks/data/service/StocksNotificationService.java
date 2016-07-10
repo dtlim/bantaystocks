@@ -21,6 +21,8 @@ import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.home.view.HomeActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,7 +55,15 @@ public class StocksNotificationService extends Service {
 
     private void initialize() {
         Log.d("MQTT", "MQTT start notif service");
-        subscribeToAllStocks();
+        try {
+            mStocksNotificationRepository.connect();
+            mStocksNotificationRepository.unsubscribeAll();
+            mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+            EventBus.getDefault().post(t);
+        }
         mStocksNotificationRepository.getStocks()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -84,10 +94,5 @@ public class StocksNotificationService extends Service {
 
     private void saveStocksToDb(List<Stock> stocks) {
         mDatabaseRepository.insert(stocks);
-    }
-
-    private void subscribeToAllStocks() {
-        mStocksNotificationRepository.unsubscribeAll();
-        mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
     }
 }

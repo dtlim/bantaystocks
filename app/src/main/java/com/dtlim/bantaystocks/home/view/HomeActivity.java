@@ -64,6 +64,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mHomePresenter != null) {
+            mHomePresenter.onActivityPause();
+        }
+    }
+
     private void initializeToolbar() {
         if(mToolbar != null) {
             setSupportActionBar(mToolbar);

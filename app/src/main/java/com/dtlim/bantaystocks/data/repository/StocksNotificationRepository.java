@@ -11,7 +11,8 @@ import rx.Observable;
  * Created by dale on 6/28/16.
  */
 public interface StocksNotificationRepository {
-    void subscribe(String... stocks);
+    void connect() throws Throwable;
+    void subscribe(String... stocks) throws Throwable;
     void unsubscribe(String... stocks);
     void unsubscribeAll();
     Observable<List<Stock>> getStocks();

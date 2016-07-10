@@ -21,7 +21,12 @@ public class FakeStocksNotificationRepository implements StocksNotificationRepos
     final Random random = new Random();
 
     @Override
-    public void subscribe(String... stocks) {
+    public void connect() throws Throwable {
+
+    }
+
+    @Override
+    public void subscribe(String... stocks) throws Throwable {
 
     }
 

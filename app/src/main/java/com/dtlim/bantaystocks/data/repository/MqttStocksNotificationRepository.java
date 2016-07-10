@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,59 +37,51 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
 
     public MqttStocksNotificationRepository() {
         mStocksSubject = PublishSubject.create();
-
-        try {
-            mClient = new MqttClient(MQTT_SERVER_URI,
-                    MqttClient.generateClientId(),
-                    new MemoryPersistence());
-
-            mClient.setCallback(new MqttCallback() {
-                @Override
-                public void connectionLost(Throwable throwable) {
-
-                }
-
-                @Override
-                public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                    String message = new String(mqttMessage.getPayload());
-                    Log.d("MQTT", topic + ": " + message);
-                    publishStocks(message);
-                }
-
-                @Override
-                public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-                }
-            });
-
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setCleanSession(false);
-            options.setUserName(MQTT_USERNAME);
-            options.setPassword(MQTT_PASSWORD.toCharArray());
-            options.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT);
-            options.setKeepAliveInterval(MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT);
-            options.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
-            mClient.connect(options);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
-    public void subscribe(String... topics) {
-        try {
-            if (mClient != null) {
-                int[] qos = new int[topics.length];
-                for (int i = 0; i < topics.length; i++) {
-                    qos[i] = 1;
-                }
-                mClient.subscribe(topics, qos);
-            }
-        }
+    public void connect() throws Throwable {
+        mClient = new MqttClient(MQTT_SERVER_URI,
+                MqttClient.generateClientId(),
+                new MemoryPersistence());
 
-        catch(Exception e) {
-            e.printStackTrace();
+        mClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable throwable) {
+                emitError(throwable);
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                String message = new String(mqttMessage.getPayload());
+                Log.d("MQTT", topic + ": " + message);
+                emitStocks(message);
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
+
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setCleanSession(false);
+        options.setUserName(MQTT_USERNAME);
+        options.setPassword(MQTT_PASSWORD.toCharArray());
+        options.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT);
+        options.setKeepAliveInterval(MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT);
+        options.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
+        mClient.connect(options);
+    }
+
+    @Override
+    public void subscribe(String... topics) throws Exception{
+        if (mClient != null) {
+            int[] qos = new int[topics.length];
+            for (int i = 0; i < topics.length; i++) {
+                qos[i] = 1;
+            }
+            mClient.subscribe(topics, qos);
         }
     }
 
@@ -123,7 +116,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         return mStocksSubject.asObservable();
     }
 
-    private void publishStocks(String message) {
+    private void emitStocks(String message) {
         Stock stock;
         StockList stockList;
         if((stock = ParseUtility.parseSingleStockFromJson(message)) != null && stock.isValid()) {
@@ -151,6 +144,15 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
             public void run() {
                 List<Stock> stocks = stockList.getStockList();
                 mStocksSubject.onNext(stocks);
+            }
+        });
+    }
+
+    private void emitError(final Throwable throwable) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mStocksSubject.onError(throwable);
             }
         });
     }

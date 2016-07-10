@@ -9,6 +9,9 @@ import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.home.presenter.HomePresenter;
 import com.dtlim.bantaystocks.home.view.HomeView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,11 +45,13 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
     public void onActivityResume() {
         initializeData();
         mSharedPreferencesRepository.registerSharedPreferencesListener(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onActivityPause() {
         mSharedPreferencesRepository.unregisterSharedPreferencesListener(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -76,6 +81,12 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
         stocks.remove(stock.getSymbol());
         mSharedPreferencesRepository.saveSubscribedStocks(stocks.toArray(new String[stocks.size()]));
         setStocksFromSharedPreferences();
+    }
+
+    @Subscribe
+    public void onEvent(Throwable throwable) {
+        Log.d("EVENTBUZ", "EVENTBUZ received from service");
+        throwable.printStackTrace();
     }
 
     private void setStocksFromSharedPreferences() {
