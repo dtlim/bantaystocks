@@ -7,6 +7,14 @@
     <color name="bantaystocks_color_stock_price_up_green">#4CAF50</color>
     <color name="bantaystocks_color_stock_price_down_red">#F44336</color>
 
+    <!-- HOME -->
+    <color name="bantaystocks_color_home_text">#757575</color>
 
+    <!-- SELECT -->
     <color name="bantaystocks_color_select_stocks_item_gray">#EEEEEE</color>
+
+    <!-- HOMESCREEN -->
+    <color name="bantaystocks_color_homescreen_container_background">#424242</color>
+    <color name="bantaystocks_color_homescreen_text">#BDBDBD</color>
+
 </resources>

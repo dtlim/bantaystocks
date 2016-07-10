@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
 import com.dtlim.bantaystocks.data.model.Stock;
-import com.dtlim.bantaystocks.home.customview.BantayStockButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,9 +116,9 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             else {
                 holder.textViewPrice.setTextColor(
-                        ContextCompat.getColor(mContext, android.R.color.primary_text_dark));
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_home_text));
                 holder.textViewPercentChange.setTextColor(
-                        ContextCompat.getColor(mContext, android.R.color.primary_text_dark));
+                        ContextCompat.getColor(mContext, R.color.bantaystocks_color_home_text));
                 holder.textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
                         null, null, null, null);
             }

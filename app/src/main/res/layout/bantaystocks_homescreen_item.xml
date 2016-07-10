@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="TEL"
+        android:textColor="@color/bantaystocks_color_homescreen_text"
         android:textSize="@dimen/bantaystocks_dimen_text_size_36"
         android:textStyle="bold"/>
 
@@ -28,7 +28,7 @@
             android:id="@+id/bantaystocks_homescreen_stock_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1234.00"
+            android:textColor="@color/bantaystocks_color_homescreen_text"
             android:textSize="@dimen/bantaystocks_dimen_text_size_16"
             android:textStyle="bold"/>
 
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/bantaystocks_ticker_up"
-            android:text="5.6%"
+            android:textColor="@color/bantaystocks_color_homescreen_text"
             android:textSize="@dimen/bantaystocks_dimen_text_size_12"
             android:gravity="center"/>
 

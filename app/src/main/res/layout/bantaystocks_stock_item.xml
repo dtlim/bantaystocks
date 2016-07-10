@@ -21,7 +21,7 @@
                 android:id="@+id/bantaystocks_stock_item_symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TEL"
+                android:textColor="@color/bantaystocks_color_home_text"
                 android:textSize="@dimen/bantaystocks_dimen_text_size_20"
                 android:textStyle="bold"/>
 
@@ -29,7 +29,7 @@
                 android:id="@+id/bantaystocks_stock_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Philippine Long Distance bla bla"
+                android:textColor="@color/bantaystocks_color_home_text"
                 android:textSize="@dimen/bantaystocks_dimen_text_size_12"
                 android:ellipsize="end" />
 
@@ -50,7 +50,7 @@
                 android:id="@+id/bantaystocks_stock_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234.00"
+                android:textColor="@color/bantaystocks_color_home_text"
                 android:textSize="@dimen/bantaystocks_dimen_text_size_20"
                 android:textStyle="bold"/>
 
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/bantaystocks_ticker_up"
-                android:text="5.6%"
+                android:textColor="@color/bantaystocks_color_home_text"
                 android:textSize="@dimen/bantaystocks_dimen_text_size_12"
                 android:gravity="center"/>
 

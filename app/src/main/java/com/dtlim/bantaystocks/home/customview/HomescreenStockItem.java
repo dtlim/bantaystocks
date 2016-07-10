@@ -5,9 +5,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -63,6 +61,8 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
         inflate(getContext(), R.layout.bantaystocks_homescreen_item, this);
         ButterKnife.bind(this);
 
+        setCardBackgroundColor(ContextCompat.getColor(getContext(),
+                R.color.bantaystocks_color_homescreen_container_background));
         setOnClickListener(this);
         closeButton.setOnClickListener(this);
         LayoutTransition transition = new LayoutTransition();
@@ -97,9 +97,9 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
                         ContextCompat.getDrawable(getContext(), R.drawable.bantaystocks_ticker_down), null, null, null);
             } else {
                 textViewPrice.setTextColor(
-                        ContextCompat.getColor(getContext(), android.R.color.primary_text_dark));
+                        ContextCompat.getColor(getContext(), R.color.bantaystocks_color_homescreen_text));
                 textViewPercentChange.setTextColor(
-                        ContextCompat.getColor(getContext(), android.R.color.primary_text_dark));
+                        ContextCompat.getColor(getContext(), R.color.bantaystocks_color_homescreen_text));
                 textViewPercentChange.setCompoundDrawablesWithIntrinsicBounds(
                         null, null, null, null);
             }
