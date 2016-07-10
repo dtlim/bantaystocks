@@ -26,6 +26,7 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface Listener {
         void onClickWatch(Stock stock);
+        void onClickRemove(Stock stock);
     }
 
     private List<Stock> mListStocks;
@@ -143,6 +144,13 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View v) {
                 mListener.onClickWatch(currentStock);
+            }
+        });
+
+        holder.closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickRemove(currentStock);
             }
         });
     }

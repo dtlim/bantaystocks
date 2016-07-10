@@ -69,6 +69,15 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
         setWatchedStocksFromSharedPreferences();
     }
 
+    @Override
+    public void removeStock(Stock stock) {
+        String[] list = ParseUtility.parseStockList(mSharedPreferencesRepository.getSubscribedStocks());
+        ArrayList<String> stocks = new ArrayList<>(Arrays.asList(list));
+        stocks.remove(stock.getSymbol());
+        mSharedPreferencesRepository.saveSubscribedStocks(stocks.toArray(new String[stocks.size()]));
+        setStocksFromSharedPreferences();
+    }
+
     private void setStocksFromSharedPreferences() {
         String subscribedStocks = mSharedPreferencesRepository.getSubscribedStocks();
         String[] subscribedStocksList = ParseUtility.parseStockList(subscribedStocks);

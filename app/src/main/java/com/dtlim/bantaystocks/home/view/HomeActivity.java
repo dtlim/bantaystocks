@@ -110,6 +110,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
         attemptToShowHomescreenTicker(stock);
     }
 
+    @Override
+    public void onClickRemove(Stock stock) {
+        mHomePresenter.removeStock(stock);
+    }
+
     // https://developer.android.com/reference/android/Manifest.permission.html#SYSTEM_ALERT_WINDOW
     private void attemptToShowHomescreenTicker(Stock stock) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
