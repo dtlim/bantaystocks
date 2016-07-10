@@ -42,8 +42,10 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public TextView textViewPrice;
         @BindView(R.id.bantaystocks_stock_item_percent_change)
         public TextView textViewPercentChange;
-        @BindView(R.id.bantaystocks_stock_item_watch_button)
+        @BindView(R.id.bantaystocks_stock_item_button_watch)
         public ImageView watchButton;
+        @BindView(R.id.bantaystocks_stock_item_button_close)
+        public ImageView closeButton;
 
         public StockViewHolder(View itemView) {
             super(itemView);
