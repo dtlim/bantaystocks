@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bantaystocks_home_layout_not_subscribed"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:background="@color/bantaystocks_color_select_stocks_item_gray"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bantaystocks_icon_home_remove" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="You are not subscribed to any stock."
+        android:textColor="@color/bantaystocks_color_home_text" />
+
+    <Button
+        android:id="@+id/bantaystocks_home_button_subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="Subscribe!"
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+</LinearLayout>

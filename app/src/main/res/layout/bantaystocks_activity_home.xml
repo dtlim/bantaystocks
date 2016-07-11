@@ -40,6 +40,6 @@
         android:src="@drawable/bantaystocks_icon_home_subscribe"
         app:layout_behavior="com.dtlim.bantaystocks.common.customview.ScrollFabBehavior"/>
 
-    <include layout="@layout/bantaystocks_activity_home_no_connection" />
+    <include layout="@layout/bantaystocks_activity_home_not_subscribed" />
 
 </android.support.design.widget.CoordinatorLayout>

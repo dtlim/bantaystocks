@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
@@ -34,6 +35,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements HomeView, HomeStocksAdapter.Listener {
 
+    @BindView(R.id.bantaystocks_home_layout_not_subscribed)
+    ViewGroup mViewNotSubscribed;
+    @BindView(R.id.bantaystocks_home_button_subscribe)
+    Button mButtonSubscribe;
     @BindView(R.id.bantaystocks_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.bantaystocks_main_recyclerview)
@@ -101,6 +106,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
                 startSelectStocksActivity();
             }
         });
+        mButtonSubscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSelectStocksActivity();
+            }
+        });
     }
 
     @Override
@@ -115,7 +126,12 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
 
     @Override
     public void showNoSubscribedStocks() {
+        mViewNotSubscribed.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void hideNoSubscribedStocks() {
+        mViewNotSubscribed.setVisibility(View.GONE);
     }
 
     @Override

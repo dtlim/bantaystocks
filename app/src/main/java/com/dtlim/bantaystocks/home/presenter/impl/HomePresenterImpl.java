@@ -104,6 +104,7 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
                         if(stocks != null && !stocks.isEmpty()) {
                             Log.d("REACTZ", "REACTZ call set subscribed stocks home");
                             mHomeView.setSubscribedStocks(stocks);
+                            mHomeView.hideNoSubscribedStocks();
                         }
                         else {
                             mHomeView.setSubscribedStocks(Collections.EMPTY_LIST);
