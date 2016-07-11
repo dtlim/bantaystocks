@@ -114,6 +114,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
     }
 
     @Override
+    public void showNoSubscribedStocks() {
+
+    }
+
+    @Override
     public void onClickWatch(Stock stock) {
         attemptToShowHomescreenTicker(stock);
     }
@@ -127,7 +132,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
     private void attemptToShowHomescreenTicker(Stock stock) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(Settings.canDrawOverlays(this)) {
-                //((BantayStocksApplication) getApplication()).startStocksDisplayService();
                 mHomePresenter.watchStock(stock);
             }
             else {
@@ -135,7 +139,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
             }
         }
         else {
-            //((BantayStocksApplication) getApplication()).startStocksDisplayService();
             mHomePresenter.watchStock(stock);
         }
     }

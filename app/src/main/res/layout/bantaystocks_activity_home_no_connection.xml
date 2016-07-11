@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bantaystocks_homescreen_layout_no_connection"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bantaystocks_color_select_stocks_item_gray"
+    android:visibility="gone">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/bantaystocks_icon_home_remove"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="No connection."/>
+
+</FrameLayout>

@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -103,6 +104,10 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
                         if(stocks != null && !stocks.isEmpty()) {
                             Log.d("REACTZ", "REACTZ call set subscribed stocks home");
                             mHomeView.setSubscribedStocks(stocks);
+                        }
+                        else {
+                            mHomeView.setSubscribedStocks(Collections.EMPTY_LIST);
+                            mHomeView.showNoSubscribedStocks();
                         }
                     }
                 });
