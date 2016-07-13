@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
  */
 public class StocksNotificationService extends Service {
 
-    private StocksNotificationRepository mStocksNotificationRepository = new MqttStocksNotificationRepository();
+    private StocksNotificationRepository mStocksNotificationRepository = BantayStocksApplication.getStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
 
     public void onCreate() {

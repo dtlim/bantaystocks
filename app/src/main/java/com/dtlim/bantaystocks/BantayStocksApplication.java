@@ -7,7 +7,9 @@ import com.dtlim.bantaystocks.data.database.DatabaseHelper;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.database.repository.SqliteDatabaseRepository;
 import com.dtlim.bantaystocks.data.repository.LocalSharedPreferencesRepository;
+import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
+import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.data.service.StocksDisplayService;
 import com.dtlim.bantaystocks.data.service.StocksNotificationService;
 import com.facebook.stetho.Stetho;
@@ -19,6 +21,7 @@ public class BantayStocksApplication extends Application {
 
     private static DatabaseRepository sDatabaseRepository;
     private static SharedPreferencesRepository sSharedPreferencesRepository;
+    private static StocksNotificationRepository sStocksNotificationRepository;
 
     @Override
     public void onCreate() {
@@ -33,7 +36,7 @@ public class BantayStocksApplication extends Application {
         sDatabaseRepository = new SqliteDatabaseRepository(
                 new DatabaseHelper(this, "bantaystocks", 1));
         sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
-
+        sStocksNotificationRepository = Injection.provideStocksNotificationRepository();
         sSharedPreferencesRepository.saveWatchedStocks(new String[] {});
     }
 
@@ -53,5 +56,9 @@ public class BantayStocksApplication extends Application {
 
     public static SharedPreferencesRepository getSharedPreferencesRepository() {
         return sSharedPreferencesRepository;
+    }
+
+    public static StocksNotificationRepository getStocksNotificationRepository() {
+        return sStocksNotificationRepository;
     }
 }
