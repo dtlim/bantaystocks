@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
+import com.dtlim.bantaystocks.common.utility.DateUtility;
 import com.dtlim.bantaystocks.common.utility.ViewAnimationUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
 
@@ -35,6 +36,8 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
     TextView textViewPrice;
     @BindView(R.id.bantaystocks_homescreen_stock_item_percent_change)
     TextView textViewPercentChange;
+    @BindView(R.id.bantaystocks_homescreen_stock_item_last_update)
+    TextView textViewLastUpdate;
     @BindView(R.id.bantaystocks_homescreen_stock_item_close)
     ViewGroup closeButton;
 
@@ -78,6 +81,8 @@ public class HomescreenStockItem extends CardView implements View.OnClickListene
         textViewSymbol.setText(stock.getSymbol());
         textViewPrice.setText(stock.getPrice().getAmount());
         textViewPercentChange.setText(stock.getPercentChange());
+        textViewLastUpdate.setText("as of: " +
+                DateUtility.parseUnixTimestampToDisplay(stock.getLastUpdate()));;
 
         try {
             float percentage = Float.valueOf(stock.getPercentChange());
