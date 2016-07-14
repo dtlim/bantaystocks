@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.dtlim.bantaystocks.common.utility.DateUtility;
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.model.StockList;
@@ -14,7 +15,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +133,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
             public void run() {
                 List<Stock> stocks = new ArrayList<Stock>();
                 stocks.add(stock);
+                stock.setLastUpdate(System.currentTimeMillis() + "");
                 mStocksSubject.onNext(stocks);
             }
         });
@@ -143,6 +144,10 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
             @Override
             public void run() {
                 List<Stock> stocks = stockList.getStockList();
+                for(int i=0; i<stocks.size(); i++) {
+                    stocks.get(i).setLastUpdate(
+                            DateUtility.parseApiToUnixTimestamp(stockList.getAsOf()));
+                }
                 mStocksSubject.onNext(stocks);
             }
         });

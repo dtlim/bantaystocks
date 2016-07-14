@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dtlim.bantaystocks.R;
+import com.dtlim.bantaystocks.common.utility.DateUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
 
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public TextView textViewPrice;
         @BindView(R.id.bantaystocks_stock_item_percent_change)
         public TextView textViewPercentChange;
+        @BindView(R.id.bantaystocks_stock_item_last_update)
+        public TextView textViewLastUpdate;
         @BindView(R.id.bantaystocks_stock_item_button_watch)
         public ImageView watchButton;
         @BindView(R.id.bantaystocks_stock_item_button_close)
@@ -98,6 +101,8 @@ public class HomeStocksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.textViewSymbol.setText(currentStock.getSymbol());
         holder.textViewPrice.setText(currentStock.getPrice().getAmount());
         holder.textViewPercentChange.setText(currentStock.getPercentChange());
+        holder.textViewLastUpdate.setText("as of: " +
+                DateUtility.parseUnixTimestampToDisplay(currentStock.getLastUpdate()));
 
         try {
             float percentage = Float.valueOf(currentStock.getPercentChange());

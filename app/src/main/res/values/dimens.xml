@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Text sizes -->
+    <dimen name="bantaystocks_dimen_text_size_8">8sp</dimen>
+    <dimen name="bantaystocks_dimen_text_size_10">10sp</dimen>
     <dimen name="bantaystocks_dimen_text_size_12">12sp</dimen>
     <dimen name="bantaystocks_dimen_text_size_16">16sp</dimen>
     <dimen name="bantaystocks_dimen_text_size_20">20sp</dimen>

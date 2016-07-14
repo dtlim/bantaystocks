@@ -14,6 +14,7 @@ public class StockTable implements BaseColumns {
     public static final String PERCENT_CHANGE = "percent_change";
     public static final String VOLUME = "volume";
     public static final String SYMBOL = "symbol";
+    public static final String LAST_UPDATE = "last_update";
 
     public static final String CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
             + _ID                   +       " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -23,6 +24,7 @@ public class StockTable implements BaseColumns {
             + PERCENT_CHANGE        +       " TEXT, "
             + VOLUME                +       " TEXT, "
             + SYMBOL                +       " TEXT, "
+            + LAST_UPDATE           +       " TEXT, "
             + "UNIQUE (" + NAME + ") ON CONFLICT REPLACE);";
 
     public static final String DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;

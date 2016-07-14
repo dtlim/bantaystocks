@@ -34,6 +34,7 @@ public class StockDao extends BaseDao<Stock>{
         contentValues.put(StockTable.PERCENT_CHANGE, stock.getPercentChange());
         contentValues.put(StockTable.VOLUME, stock.getVolume());
         contentValues.put(StockTable.SYMBOL, stock.getSymbol());
+        contentValues.put(StockTable.LAST_UPDATE, stock.getLastUpdate());
 
         return contentValues;
     }
@@ -53,6 +54,7 @@ public class StockDao extends BaseDao<Stock>{
                     Price price = new Price(cursor.getString(cursor.getColumnIndex(StockTable.CURRENCY)),
                             cursor.getString(cursor.getColumnIndex(StockTable.PRICE)));
                     stock.setPrice(price);
+                    stock.setLastUpdate(cursor.getString(cursor.getColumnIndex(StockTable.LAST_UPDATE)));
                     stockList.add(stock);
                 }
                 while (cursor.moveToNext());

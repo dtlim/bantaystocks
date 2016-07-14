@@ -16,6 +16,8 @@ public class Stock {
     private String volume;
     @SerializedName("symbol")
     private String symbol;
+    @SerializedName("as_of")
+    private String lastUpdate;
 
     public String getName() {
         return name;
@@ -55,6 +57,14 @@ public class Stock {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public boolean isValid() {
