@@ -1,8 +1,10 @@
 package com.dtlim.bantaystocks.data.database.repository;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import com.dtlim.bantaystocks.data.database.Database;
+import com.dtlim.bantaystocks.data.database.DatabaseHelper;
 import com.dtlim.bantaystocks.data.database.dao.StockDao;
 import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Stock;
@@ -23,8 +25,8 @@ public class SqliteDatabaseRepository implements DatabaseRepository{
     private StockDao mStockDao;
     private Database mDatabase;
 
-    public SqliteDatabaseRepository(Database database) {
-        mDatabase = database;
+    public SqliteDatabaseRepository(Context context) {
+        mDatabase = new DatabaseHelper(context, "bantaystocks", 1);
         mStockDao = new StockDao(mDatabase);
     }
 

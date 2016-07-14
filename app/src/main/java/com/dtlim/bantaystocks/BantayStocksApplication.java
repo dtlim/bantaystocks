@@ -33,9 +33,8 @@ public class BantayStocksApplication extends Application {
 
     public void initialize() {
         Stetho.initializeWithDefaults(this);
-        sDatabaseRepository = new SqliteDatabaseRepository(
-                new DatabaseHelper(this, "bantaystocks", 1));
-        sSharedPreferencesRepository = new LocalSharedPreferencesRepository(this);
+        sDatabaseRepository = Injection.provideDatabaseRepository(this);
+        sSharedPreferencesRepository = Injection.provideSharedPreferencesRepository(this);
         sStocksNotificationRepository = Injection.provideStocksNotificationRepository();
         sSharedPreferencesRepository.saveWatchedStocks(new String[] {});
     }

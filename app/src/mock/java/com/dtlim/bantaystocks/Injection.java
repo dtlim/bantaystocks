@@ -13,4 +13,13 @@ public class Injection {
     public static StocksNotificationRepository provideStocksNotificationRepository() {
         return new FakeStocksNotificationRepository();
     }
+
+    // TODO make fake
+    public static DatabaseRepository provideDatabaseRepository(Context context) {
+        return new SqliteDatabaseRepository(context);
+    }
+
+    public static SharedPreferencesRepository provideSharedPreferencesRepository(Context context) {
+        return new LocalSharedPreferencesRepository(context);
+    }
 }
