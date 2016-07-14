@@ -65,6 +65,7 @@ public class SelectStocksActivity extends AppCompatActivity implements SelectSto
 
     private void initializeToolbar() {
         if(mToolbar != null) {
+            mToolbar.setTitle("Select stocks");
             setSupportActionBar(mToolbar);
             if(getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
