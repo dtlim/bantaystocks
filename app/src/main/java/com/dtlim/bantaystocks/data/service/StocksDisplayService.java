@@ -110,7 +110,7 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("BantayStocks")
-                .setContentText("BantayStocks is currently running")
+                .setContentText("BantayStocks may display stock data anywhere.")
                 .setContentIntent(pendingIntent).build();
 
         startForeground(9999, notification);

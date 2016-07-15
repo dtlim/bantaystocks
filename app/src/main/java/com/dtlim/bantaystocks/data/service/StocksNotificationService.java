@@ -74,8 +74,7 @@ public class StocksNotificationService extends Service {
                             saveStocksToDb(stocks);
                     }
                 });
-        initializeForeground();
-
+        //initializeForeground();
     }
 
     private void initializeForeground() {
@@ -86,7 +85,7 @@ public class StocksNotificationService extends Service {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("BantayStocks")
-                .setContentText("BantayStocks is currently running")
+                .setContentInfo("BantayStocks is currently watching stock prices.")
                 .setContentIntent(pendingIntent).build();
 
         startForeground(9998, notification);
