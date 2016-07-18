@@ -32,7 +32,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     public static final String MQTT_PASSWORD = "password";
 
     private MqttClient mClient;
-    PublishSubject mStocksSubject;
+    PublishSubject<List<Stock>> mStocksSubject;
     Handler handler = new Handler(Looper.getMainLooper());
 
     public MqttStocksNotificationRepository() {

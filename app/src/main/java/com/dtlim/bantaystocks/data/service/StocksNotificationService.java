@@ -4,20 +4,14 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
-import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
-import com.dtlim.bantaystocks.data.repository.FakeStocksNotificationRepository;
-import com.dtlim.bantaystocks.data.repository.LocalSharedPreferencesRepository;
-import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.home.view.HomeActivity;
 

@@ -18,6 +18,7 @@ public class DummyModels {
         stock.setPrice(new Price("PHP", "123.00"));
         stock.setVolume("1000");
         stock.setPercentChange("5.67");
+        stock.setLastUpdate("1468805483");
         list.add(stock);
 
         stock = new Stock();
@@ -26,6 +27,7 @@ public class DummyModels {
         stock.setPrice(new Price("PHP", "53.00"));
         stock.setVolume("10300");
         stock.setPercentChange("-10.67");
+        stock.setLastUpdate("1468805483");
         list.add(stock);
 
         stock = new Stock();
@@ -34,6 +36,25 @@ public class DummyModels {
         stock.setPrice(new Price("PHP", "123.00"));
         stock.setVolume("1000");
         stock.setPercentChange("5.67");
+        stock.setLastUpdate("1468805483");
+        list.add(stock);
+
+        stock = new Stock();
+        stock.setName("ABACORE Capital");
+        stock.setSymbol("ABA");
+        stock.setPrice(new Price("PHP", "1000.00"));
+        stock.setVolume("1000");
+        stock.setPercentChange("-2.98");
+        stock.setLastUpdate("1468805483");
+        list.add(stock);
+
+        stock = new Stock();
+        stock.setName("SMC Pref 2G");
+        stock.setSymbol("SMC2G");
+        stock.setPrice(new Price("PHP", "1433.00"));
+        stock.setVolume("1000");
+        stock.setPercentChange("10.48");
+        stock.setLastUpdate("1468805483");
         list.add(stock);
 
         return list;

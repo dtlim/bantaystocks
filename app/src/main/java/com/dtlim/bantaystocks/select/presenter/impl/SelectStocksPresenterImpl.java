@@ -1,6 +1,7 @@
 package com.dtlim.bantaystocks.select.presenter.impl;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
@@ -47,6 +48,7 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
                 .subscribe(new Action1<List<Stock>>() {
                     @Override
                     public void call(List<Stock> stocks) {
+                        Log.d("MOCKZ", "call: " + stocks.size());
                         mSelectView.setStocks(stocks);
                     }
                 });
