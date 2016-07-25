@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, HomeSto
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.bantaystocks_activity_home);
         ButterKnife.bind(this);
 

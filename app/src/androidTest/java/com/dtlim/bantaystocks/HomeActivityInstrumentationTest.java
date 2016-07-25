@@ -1,11 +1,13 @@
 package com.dtlim.bantaystocks;
 
+import android.provider.Settings;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.dtlim.bantaystocks.home.view.HomeActivity;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,11 +36,6 @@ public class HomeActivityInstrumentationTest {
     @Rule
     public ActivityTestRule<HomeActivity> activityTestRule =
             new ActivityTestRule<>(HomeActivity.class);
-
-    @Before
-    public void beforeEachTest() {
-        ((BantayStocksApplication) activityTestRule.getActivity().getApplication()).initialize();
-    }
 
     @Test
     public void validateToolbarTitle() {
@@ -81,5 +78,10 @@ public class HomeActivityInstrumentationTest {
         onView(withId(R.id.bantaystocks_main_recyclerview)).perform(
                 scrollTo(hasDescendant(withText("ABA"))));
         onView(withText("ABA")).check(matches(isDisplayed()));
+    }
+
+    @After
+    public void afterEachTest() {
+        ((BantayStocksApplication) activityTestRule.getActivity().getApplication()).initialize();
     }
 }

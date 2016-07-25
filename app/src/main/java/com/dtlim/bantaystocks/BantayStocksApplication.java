@@ -3,11 +3,7 @@ package com.dtlim.bantaystocks;
 import android.app.Application;
 import android.content.Intent;
 
-import com.dtlim.bantaystocks.data.database.DatabaseHelper;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
-import com.dtlim.bantaystocks.data.database.repository.SqliteDatabaseRepository;
-import com.dtlim.bantaystocks.data.repository.LocalSharedPreferencesRepository;
-import com.dtlim.bantaystocks.data.repository.MqttStocksNotificationRepository;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.data.service.StocksDisplayService;

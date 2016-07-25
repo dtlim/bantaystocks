@@ -93,7 +93,6 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
     private void setStocksFromSharedPreferences() {
         String subscribedStocks = mSharedPreferencesRepository.getSubscribedStocks();
         String[] subscribedStocksList = ParseUtility.parseStockList(subscribedStocks);
-
         Observable<List<Stock>> stocks = mDatabaseRepository.queryStocks(subscribedStocksList);
 
         stocks.subscribeOn(Schedulers.newThread())
@@ -102,7 +101,6 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
                     @Override
                     public void call(List<Stock> stocks) {
                         if(stocks != null && !stocks.isEmpty()) {
-                            Log.d("REACTZ", "REACTZ call set subscribed stocks home");
                             mHomeView.setSubscribedStocks(stocks);
                             mHomeView.hideNoSubscribedStocks();
                         }
