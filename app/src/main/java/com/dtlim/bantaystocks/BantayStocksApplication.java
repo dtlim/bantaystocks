@@ -10,8 +10,6 @@ import com.dtlim.bantaystocks.data.service.StocksDisplayService;
 import com.dtlim.bantaystocks.data.service.StocksNotificationService;
 import com.facebook.stetho.Stetho;
 
-import org.greenrobot.eventbus.EventBus;
-
 /**
  * Created by dale on 6/23/16.
  */

@@ -27,8 +27,8 @@ import rx.subjects.PublishSubject;
  */
 public class MqttStocksNotificationRepository implements StocksNotificationRepository {
 
-    //public static final String MQTT_SERVER_URI = "tcp://api.brandx.dev.voyager.ph:1883";
-    public static final String MQTT_SERVER_URI = "tcp://broker.mqttdashboard.com:1883";
+    public static final String MQTT_SERVER_URI = "tcp://api.brandx.dev.voyager.ph:1883";
+    //public static final String MQTT_SERVER_URI = "tcp://broker.mqttdashboard.com:1883";
     public static final String MQTT_USERNAME = "dtlim";
     public static final String MQTT_PASSWORD = "password";
 

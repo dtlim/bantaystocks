@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -12,25 +11,20 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
-import com.dtlim.bantaystocks.data.database.table.StockTable;
-import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
-import com.dtlim.bantaystocks.home.view.HomeActivity;
 import com.dtlim.bantaystocks.home.customview.HomescreenItemTouchListener;
 import com.dtlim.bantaystocks.home.customview.HomescreenStockItem;
-import com.squareup.sqlbrite.SqlBrite;
+import com.dtlim.bantaystocks.home.view.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 

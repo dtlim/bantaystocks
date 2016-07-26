@@ -1,19 +1,13 @@
 package com.dtlim.bantaystocks.data.repository.mock;
 
-import com.dtlim.bantaystocks.data.model.Price;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.StocksNotificationRepository;
 import com.dtlim.bantaystocks.dummy.DummyModels;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.TimeInterval;
 
 /**
  * Created by dale on 6/29/16.

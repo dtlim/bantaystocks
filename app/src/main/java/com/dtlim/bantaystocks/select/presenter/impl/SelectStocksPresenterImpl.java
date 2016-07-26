@@ -1,16 +1,13 @@
 package com.dtlim.bantaystocks.select.presenter.impl;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
-import com.dtlim.bantaystocks.home.view.HomeView;
 import com.dtlim.bantaystocks.select.presenter.SelectStocksPresenter;
 import com.dtlim.bantaystocks.select.view.SelectStocksView;
-import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 

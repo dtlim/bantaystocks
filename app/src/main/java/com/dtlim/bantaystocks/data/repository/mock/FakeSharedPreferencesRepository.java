@@ -1,7 +1,5 @@
 package com.dtlim.bantaystocks.data.repository.mock;
 
-import android.util.Log;
-
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 

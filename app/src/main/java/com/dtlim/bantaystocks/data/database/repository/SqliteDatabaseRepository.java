@@ -10,7 +10,6 @@ import com.dtlim.bantaystocks.data.database.table.StockTable;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.squareup.sqlbrite.SqlBrite;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
