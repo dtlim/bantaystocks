@@ -12,4 +12,5 @@ public interface HomeView {
     void setWatchedStocks(String[] stocks);
     void showNoSubscribedStocks();
     void hideNoSubscribedStocks();
+    void showMessage(String message);
 }

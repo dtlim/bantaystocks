@@ -27,7 +27,8 @@ import rx.subjects.PublishSubject;
  */
 public class MqttStocksNotificationRepository implements StocksNotificationRepository {
 
-    public static final String MQTT_SERVER_URI = "tcp://api.brandx.dev.voyager.ph:1883";
+    //public static final String MQTT_SERVER_URI = "tcp://api.brandx.dev.voyager.ph:1883";
+    public static final String MQTT_SERVER_URI = "tcp://broker.mqttdashboard.com:1883";
     public static final String MQTT_USERNAME = "dtlim";
     public static final String MQTT_PASSWORD = "password";
 
@@ -86,28 +87,16 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     }
 
     @Override
-    public void unsubscribe(String... topics) {
-        try {
-            if (mClient != null) {
-                mClient.unsubscribe(topics);
-            }
-        }
-
-        catch(Exception e) {
-            e.printStackTrace();
+    public void unsubscribe(String... topics) throws Exception{
+        if (mClient != null) {
+            mClient.unsubscribe(topics);
         }
     }
 
     @Override
-    public void unsubscribeAll() {
-        try {
-            if (mClient != null) {
-                mClient.unsubscribe("dale/stocks/*");
-            }
-        }
-
-        catch(Exception e) {
-            e.printStackTrace();
+    public void unsubscribeAll() throws Exception{
+        if (mClient != null) {
+            mClient.unsubscribe("dale/stocks/*");
         }
     }
 

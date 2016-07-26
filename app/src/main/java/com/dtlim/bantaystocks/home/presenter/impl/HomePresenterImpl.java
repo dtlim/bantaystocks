@@ -9,6 +9,7 @@ import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.home.presenter.HomePresenter;
 import com.dtlim.bantaystocks.home.view.HomeView;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -88,6 +89,12 @@ public class HomePresenterImpl implements HomePresenter, SharedPreferencesReposi
     public void onEvent(Throwable throwable) {
         Log.d("EVENTBUZ", "EVENTBUZ received from service");
         throwable.printStackTrace();
+        if(throwable instanceof MqttException) {
+            mHomeView.showMessage("An error has occurred.  Trying to connect again...");
+        }
+        else {
+            mHomeView.showMessage("An error has occurred.");
+        }
     }
 
     private void setStocksFromSharedPreferences() {

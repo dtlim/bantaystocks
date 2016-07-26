@@ -13,7 +13,7 @@ import rx.Observable;
 public interface StocksNotificationRepository {
     void connect() throws Throwable;
     void subscribe(String... stocks) throws Throwable;
-    void unsubscribe(String... stocks);
-    void unsubscribeAll();
+    void unsubscribe(String... stocks) throws Throwable;
+    void unsubscribeAll() throws Throwable;
     Observable<List<Stock>> getStocks();
 }
