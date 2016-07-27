@@ -125,6 +125,8 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
         params.x = 0;
         params.y = 100;
 
+        // Have to add another view to enable animations in WindowManager for pre-lollipop
+        // http://stackoverflow.com/questions/17745282/windowmanager-with-animation-is-it-possible
         FrameLayout mLayout = new FrameLayout(this);
         stockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, mLayout, params));
         mLayout.addView(stockItem);
