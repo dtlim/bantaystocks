@@ -2,6 +2,7 @@ package com.dtlim.bantaystocks.home.customview;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 /**
@@ -12,6 +13,7 @@ public class HomescreenItemTouchListener implements View.OnTouchListener {
     private static int THRESHOLD = 10;
 
     private WindowManager mWindowManager;
+    private ViewGroup mParent;
     private WindowManager.LayoutParams mParams;
     private int startX = 0;
     private int startY = 0;
@@ -21,8 +23,10 @@ public class HomescreenItemTouchListener implements View.OnTouchListener {
     private int offsetY = 0;
     private boolean isDragging = false;
 
-    public HomescreenItemTouchListener(WindowManager windowManager, WindowManager.LayoutParams params) {
+    public HomescreenItemTouchListener(WindowManager windowManager, ViewGroup parent,
+                                       WindowManager.LayoutParams params) {
         mWindowManager = windowManager;
+        mParent = parent;
         mParams = params;
     }
 
@@ -50,7 +54,7 @@ public class HomescreenItemTouchListener implements View.OnTouchListener {
                 if(Math.abs(dx) > THRESHOLD || Math.abs(dy) > THRESHOLD) {
                     mParams.x = touchX - offsetX;
                     mParams.y = touchY - offsetY;
-                    mWindowManager.updateViewLayout(view, mParams);
+                    mWindowManager.updateViewLayout(mParent, mParams);
                     isDragging = true;
                     return true;
                 }

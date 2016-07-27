@@ -1,6 +1,7 @@
 package com.dtlim.bantaystocks.common.utility;
 
 import android.animation.Animator;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -17,6 +18,9 @@ public class ViewAnimationUtility {
         view.setScaleX(0);
         view.setScaleY(0);
         view.setVisibility(View.VISIBLE);
+        if(view.getParent() instanceof View) {
+            ((View) view.getParent()).setVisibility(View.VISIBLE);
+        }
         view.animate()
                 .scaleX(1)
                 .scaleY(1)
@@ -66,6 +70,10 @@ public class ViewAnimationUtility {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         view.setVisibility(View.GONE);
+                        if(view.getParent() instanceof View) {
+                            ((View) view.getParent()).setVisibility(View.GONE);
+                        }
+                        Log.d("ANIMZ", "SET TO GONE");
                         view.clearAnimation();
                     }
 

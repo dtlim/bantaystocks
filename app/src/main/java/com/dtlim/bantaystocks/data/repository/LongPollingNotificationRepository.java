@@ -30,6 +30,7 @@ public class LongPollingNotificationRepository implements StocksNotificationRepo
 
     }
 
+    // http://stackoverflow.com/questions/31768184/periodic-http-requests-using-rxjava-and-retrofit
     @Override
     public Observable<List<Stock>> getStocks() {
         return null;

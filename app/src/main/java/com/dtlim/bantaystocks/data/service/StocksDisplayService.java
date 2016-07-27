@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.dtlim.bantaystocks.BantayStocksApplication;
 import com.dtlim.bantaystocks.common.utility.ParseUtility;
@@ -112,6 +113,8 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
 
     private HomescreenStockItem createHomescreenStockView() {
         HomescreenStockItem stockItem = new HomescreenStockItem(this);
+        stockItem.setHomescreenStockItemListener(this);
+
         final WindowManager.LayoutParams params= new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -122,9 +125,11 @@ public class StocksDisplayService extends Service implements SharedPreferencesRe
         params.x = 0;
         params.y = 100;
 
-        stockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, params));
-        stockItem.setHomescreenStockItemListener(this);
-        mWindowManager.addView(stockItem, params);
+        FrameLayout mLayout = new FrameLayout(this);
+        stockItem.setOnTouchListener(new HomescreenItemTouchListener(mWindowManager, mLayout, params));
+        mLayout.addView(stockItem);
+
+        mWindowManager.addView(mLayout, params);
         return stockItem;
     }
 
