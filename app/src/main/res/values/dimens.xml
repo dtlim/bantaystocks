@@ -9,6 +9,6 @@
     <dimen name="bantaystocks_dimen_text_size_12">12sp</dimen>
     <dimen name="bantaystocks_dimen_text_size_16">16sp</dimen>
     <dimen name="bantaystocks_dimen_text_size_20">20sp</dimen>
-    <dimen name="bantaystocks_dimen_text_size_36">36sp</dimen>
+    <dimen name="bantaystocks_dimen_text_size_24">24sp</dimen>
 
 </resources>

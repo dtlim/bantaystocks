@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/bantaystocks_color_homescreen_text"
-            android:textSize="@dimen/bantaystocks_dimen_text_size_36"
+            android:textSize="@dimen/bantaystocks_dimen_text_size_24"
             android:textStyle="bold" />
 
         <TextView
