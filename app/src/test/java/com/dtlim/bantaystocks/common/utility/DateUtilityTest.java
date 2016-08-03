@@ -1,4 +1,4 @@
-package com.dtlim.bantaystocks;
+package com.dtlim.bantaystocks.common.utility;
 
 import com.dtlim.bantaystocks.common.utility.DateUtility;
 
