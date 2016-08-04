@@ -1,12 +1,13 @@
-package com.dtlim.bantaystocks.home.presenter;
+package com.dtlim.bantaystocks.select.presenter;
 
-import com.dtlim.bantaystocks.data.database.Database;
 import com.dtlim.bantaystocks.data.database.repository.DatabaseRepository;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.repository.SharedPreferencesRepository;
 import com.dtlim.bantaystocks.dummy.DummyModels;
 import com.dtlim.bantaystocks.home.presenter.impl.HomePresenterImpl;
 import com.dtlim.bantaystocks.home.view.HomeView;
+import com.dtlim.bantaystocks.select.presenter.impl.SelectStocksPresenterImpl;
+import com.dtlim.bantaystocks.select.view.SelectStocksView;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,12 +27,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by dale on 8/2/16.
+ * Created by dale on 8/3/16.
  */
-public class HomePresenterTest {
-
-    private HomePresenterImpl mHomePresenter;
-    private HomeView mHomeView;
+public class SelectPresenterTest {
+    private SelectStocksPresenter mSelectStocksPresenter;
+    private SelectStocksView mSelectStocksView;
     private DatabaseRepository mDatabaseRepository;
     private SharedPreferencesRepository mSharedPreferencesRepository;
 
@@ -47,16 +47,16 @@ public class HomePresenterTest {
 
     @Before
     public void beforeEachTest() {
-        mHomeView = mock(HomeView.class);
+        mSelectStocksView = mock(SelectStocksView.class);
         mDatabaseRepository = mock(DatabaseRepository.class);
         mSharedPreferencesRepository = mock(SharedPreferencesRepository.class);
 
-        mHomePresenter = new HomePresenterImpl(mDatabaseRepository, mSharedPreferencesRepository);
+        mSelectStocksPresenter = new SelectStocksPresenterImpl(mDatabaseRepository, mSharedPreferencesRepository);
     }
 
     @Test
-    public void testShowSubscribedStockList() {
-        mHomePresenter.bindView(mHomeView);
+    public void testShowStockList() {
+        mSelectStocksPresenter.bindView(mSelectStocksView);
 
         List<Stock> stocks = DummyModels.getDummyStockList();
         List<Stock> list = new ArrayList<Stock>();
@@ -67,34 +67,26 @@ public class HomePresenterTest {
         when(mSharedPreferencesRepository.getWatchedStocks()).thenReturn("TEL,MER");
         when(mDatabaseRepository.queryStocks()).thenReturn(Observable.just(stocks));
         when(mDatabaseRepository.queryStocks("TEL", "MER")).thenReturn(Observable.just(list));
-        mHomePresenter.initializeData();
+        mSelectStocksPresenter.initializeDataFromDatabase();
 
-        verify(mHomeView).hideNoSubscribedStocks();
-        verify(mHomeView).setSubscribedStocks(list);
+        verify(mSelectStocksView).setStocks(stocks);
     }
 
     @Test
-    public void testShowWatchedStockList() {
-        mHomePresenter.bindView(mHomeView);
+    public void testShowSubscribedStockList() {
+        mSelectStocksPresenter.bindView(mSelectStocksView);
 
         List<Stock> stocks = DummyModels.getDummyStockList();
-        List<Stock> subscribedList = new ArrayList<Stock>();
-        List<Stock> watchedList = new ArrayList<Stock>();
+        List<Stock> list = new ArrayList<>();
+        list.add(stocks.get(0));
+        list.add(stocks.get(1));
 
-        subscribedList.add(stocks.get(0));
-        subscribedList.add(stocks.get(1));
-        subscribedList.add(stocks.get(2));
-
-        watchedList.add(stocks.get(0));
-        watchedList.add(stocks.get(1));
-
-        when(mSharedPreferencesRepository.getSubscribedStocks()).thenReturn("TEL,MER,2GO");
+        when(mSharedPreferencesRepository.getSubscribedStocks()).thenReturn("TEL,MER");
         when(mSharedPreferencesRepository.getWatchedStocks()).thenReturn("TEL,MER");
         when(mDatabaseRepository.queryStocks()).thenReturn(Observable.just(stocks));
-        when(mDatabaseRepository.queryStocks("TEL", "MER", "2GO")).thenReturn(Observable.just(subscribedList));
-        when(mDatabaseRepository.queryStocks("TEL", "MER")).thenReturn(Observable.just(watchedList));
-        mHomePresenter.initializeData();
+        when(mDatabaseRepository.queryStocks("TEL", "MER")).thenReturn(Observable.just(list));
+        mSelectStocksPresenter.initializeSubscribedStocks();
 
-        verify(mHomeView).setWatchedStocks(new String[] {"TEL", "MER"});
+        verify(mSelectStocksView).setSubscribedStocks(new String[]{"TEL", "MER"});
     }
 }
