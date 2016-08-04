@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by dale on 6/23/16.
  */
-public class StocksNotificationService extends Service {
+public class StocksNotificationService extends Service implements StocksNotificationRepository.ConnectionListener {
 
     private StocksNotificationRepository mStocksNotificationRepository = BantayStocksApplication.getStocksNotificationRepository();
     private DatabaseRepository mDatabaseRepository = BantayStocksApplication.getDatabaseRepository();
@@ -48,37 +48,11 @@ public class StocksNotificationService extends Service {
     }
 
     private void initialize() {
-        Log.d("MQTT", "MQTT start notif service");
-        while(true) {
-            Log.d("MQTT", "MQTT try to start notif service");
-            try {
-                mStocksNotificationRepository.connect();
-                mStocksNotificationRepository.unsubscribeAll();
-                mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
-
-                mStocksNotificationRepository.getStocks()
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<List<Stock>>() {
-                            @Override
-                            public void call(List<Stock> stocks) {
-                                Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
-                                saveStocksToDb(stocks);
-                            }
-                        });
-                break;
-            }
-            catch (Throwable t) {
-                t.printStackTrace();
-                EventBus.getDefault().post(t);
-            }
-
-            try {
-                Thread.sleep(3000);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            mStocksNotificationRepository.connect(this);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
         }
         //initializeForeground();
     }
@@ -99,5 +73,32 @@ public class StocksNotificationService extends Service {
 
     private void saveStocksToDb(List<Stock> stocks) {
         mDatabaseRepository.insert(stocks);
+    }
+
+    @Override
+    public void onConnectSuccess() {
+        try {
+            mStocksNotificationRepository.unsubscribeAll();
+            mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
+
+            mStocksNotificationRepository.getStocks()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<List<Stock>>() {
+                        @Override
+                        public void call(List<Stock> stocks) {
+                            Log.d("MQTT", "MQTT call " + stocks.size() + " " + stocks.get(0).getName());
+                            saveStocksToDb(stocks);
+                        }
+                    });
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConnectFail() {
+
     }
 }

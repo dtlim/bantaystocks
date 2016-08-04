@@ -16,7 +16,7 @@ public class FakeStocksNotificationRepository implements StocksNotificationRepos
     final Random random = new Random();
 
     @Override
-    public void connect() throws Throwable {
+    public void connect(ConnectionListener listener) throws Throwable {
 
     }
 

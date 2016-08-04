@@ -9,7 +9,10 @@ import com.dtlim.bantaystocks.common.utility.ParseUtility;
 import com.dtlim.bantaystocks.data.model.Stock;
 import com.dtlim.bantaystocks.data.model.StockList;
 
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -32,7 +35,7 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     public static final String MQTT_USERNAME = "dtlim";
     public static final String MQTT_PASSWORD = "password";
 
-    private MqttClient mClient;
+    private MqttAsyncClient mClient;
     PublishSubject<List<Stock>> mStocksSubject;
     Handler handler = new Handler(Looper.getMainLooper());
 
@@ -41,8 +44,8 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
     }
 
     @Override
-    public void connect() throws Throwable {
-        mClient = new MqttClient(MQTT_SERVER_URI,
+    public void connect(final ConnectionListener listener) throws Exception {
+        mClient = new MqttAsyncClient(MQTT_SERVER_URI,
                 MqttClient.generateClientId(),
                 new MemoryPersistence());
 
@@ -72,7 +75,17 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         options.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT);
         options.setKeepAliveInterval(MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT);
         options.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
-        mClient.connect(options);
+        mClient.connect(options, null, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                listener.onConnectSuccess();
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                listener.onConnectFail();
+            }
+        });
     }
 
     @Override

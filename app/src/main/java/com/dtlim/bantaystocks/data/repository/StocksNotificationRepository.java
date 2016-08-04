@@ -11,7 +11,13 @@ import rx.Observable;
  * Created by dale on 6/28/16.
  */
 public interface StocksNotificationRepository {
-    void connect() throws Throwable;
+
+    interface ConnectionListener {
+        void onConnectSuccess();
+        void onConnectFail();
+    }
+
+    void connect(ConnectionListener listener) throws Throwable;
     void subscribe(String... stocks) throws Throwable;
     void unsubscribe(String... stocks) throws Throwable;
     void unsubscribeAll() throws Throwable;

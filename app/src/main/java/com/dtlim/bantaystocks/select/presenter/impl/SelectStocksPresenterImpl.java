@@ -45,7 +45,6 @@ public class SelectStocksPresenterImpl implements SelectStocksPresenter {
                 .subscribe(new Action1<List<Stock>>() {
                     @Override
                     public void call(List<Stock> stocks) {
-                        Log.d("MOCKZ", "call: " + stocks.size());
                         mSelectView.setStocks(stocks);
                     }
                 });

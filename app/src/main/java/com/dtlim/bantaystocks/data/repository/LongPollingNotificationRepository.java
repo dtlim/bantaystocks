@@ -11,7 +11,7 @@ import rx.Observable;
  */
 public class LongPollingNotificationRepository implements StocksNotificationRepository {
     @Override
-    public void connect() throws Throwable {
+    public void connect(ConnectionListener listener) throws Throwable {
 
     }
 
