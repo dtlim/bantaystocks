@@ -21,21 +21,6 @@ public class FakeStocksNotificationRepository implements StocksNotificationRepos
     }
 
     @Override
-    public void subscribe(String... stocks) throws Throwable {
-
-    }
-
-    @Override
-    public void unsubscribe(String... stocks) {
-
-    }
-
-    @Override
-    public void unsubscribeAll() {
-
-    }
-
-    @Override
     public Observable<List<Stock>> getStocks() {
         final List<Stock> stocks = DummyModels.getDummyStockList();
 //        return Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread()).timeInterval()

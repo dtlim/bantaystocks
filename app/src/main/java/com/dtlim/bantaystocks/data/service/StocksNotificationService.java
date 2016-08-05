@@ -54,21 +54,6 @@ public class StocksNotificationService extends Service implements StocksNotifica
         catch (Throwable e) {
             e.printStackTrace();
         }
-        //initializeForeground();
-    }
-
-    private void initializeForeground() {
-        Intent notificationIntent = new Intent(this, HomeActivity.class);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("BantayStocks")
-                .setContentInfo("BantayStocks is currently watching stock prices.")
-                .setContentIntent(pendingIntent).build();
-
-        startForeground(9998, notification);
     }
 
     private void saveStocksToDb(List<Stock> stocks) {
@@ -78,9 +63,6 @@ public class StocksNotificationService extends Service implements StocksNotifica
     @Override
     public void onConnectSuccess() {
         try {
-            mStocksNotificationRepository.unsubscribeAll();
-            mStocksNotificationRepository.subscribe("dale/stocks/ALLSTOCKS");
-
             mStocksNotificationRepository.getStocks()
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())

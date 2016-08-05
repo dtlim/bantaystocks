@@ -78,6 +78,13 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         mClient.connect(options, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
+                try {
+                    unsubscribeAll();
+                    subscribe("dale/stocks/ALLSTOCKS");
+                }
+                catch (Throwable t) {
+                    t.printStackTrace();
+                }
                 listener.onConnectSuccess();
             }
 
@@ -88,7 +95,6 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         });
     }
 
-    @Override
     public void subscribe(String... topics) throws Exception{
         if (mClient != null) {
             int[] qos = new int[topics.length];
@@ -99,14 +105,12 @@ public class MqttStocksNotificationRepository implements StocksNotificationRepos
         }
     }
 
-    @Override
     public void unsubscribe(String... topics) throws Exception{
         if (mClient != null) {
             mClient.unsubscribe(topics);
         }
     }
 
-    @Override
     public void unsubscribeAll() throws Exception{
         if (mClient != null) {
             mClient.unsubscribe("dale/stocks/*");

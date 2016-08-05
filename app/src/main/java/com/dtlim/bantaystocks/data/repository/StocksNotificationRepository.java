@@ -18,8 +18,5 @@ public interface StocksNotificationRepository {
     }
 
     void connect(ConnectionListener listener) throws Throwable;
-    void subscribe(String... stocks) throws Throwable;
-    void unsubscribe(String... stocks) throws Throwable;
-    void unsubscribeAll() throws Throwable;
     Observable<List<Stock>> getStocks();
 }
